@@ -11,7 +11,6 @@ permissions:
 jobs:
   dist:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -26,25 +25,26 @@ jobs:
           pnpm install
           pnpm --filter react build
 
-      - name: Stage build output
+      - name: Stage build output + stable aliases
         run: |
           rm -rf /tmp/dist
           mkdir -p /tmp/dist
           cp -R apps/react/dist/. /tmp/dist/
+
+          cp "$(ls -1 /tmp/dist/assets/*.js 2>/dev/null | head -n 1)" /tmp/dist/dist.js
+          if ls -1 /tmp/dist/assets/*.css >/dev/null 2>&1; then
+            cp "$(ls -1 /tmp/dist/assets/*.css | head -n 1)" /tmp/dist/dist.css
+          fi
 
       - name: Publish to dist branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # create clean orphan branch
           git checkout --orphan dist
-
-          # wipe repo contents safely
           git rm -rf . || true
           git clean -fdx
 
-          # copy ONLY built assets back in
           cp -R /tmp/dist/. .
 
           git add -A
