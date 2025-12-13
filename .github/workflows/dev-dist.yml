@@ -1,0 +1,43 @@
+name: Build development dist release
+
+on:
+  push:
+    branches: [development]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  dist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Install + build
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.15.0 --activate
+          pnpm install --frozen-lockfile
+          pnpm --filter react build
+
+      - name: Publish to dist branch
+        run: |
+          rm -rf .dist-out
+          mkdir -p .dist-out
+          cp -R apps/squiz-react/dist/. .dist-out/
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout --orphan dist
+          git rm -rf . || true
+          cp -R .dist-out/. .
+
+          git add -A
+          git commit -m "dist: ${GITHUB_SHA}"
+          git push -f origin dist
