@@ -22,14 +22,14 @@ jobs:
         run: |
           corepack enable
           corepack prepare pnpm@9.15.0 --activate
-          pnpm install --frozen-lockfile
+          pnpm install
           pnpm --filter react build
 
       - name: Publish to dist branch
         run: |
           rm -rf .dist-out
           mkdir -p .dist-out
-          cp -R apps/squiz-react/dist/. .dist-out/
+          cp -R apps/react/dist/. .dist-out/
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
