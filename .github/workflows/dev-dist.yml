@@ -29,13 +29,18 @@ jobs:
         run: |
           rm -rf .dist-out
           mkdir -p .dist-out
-          cp -R apps/react/dist/. .dist-out/
+          cp -R apps/squiz-react/dist/. .dist-out/
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git checkout --orphan dist
+
+          # remove tracked files AND untracked files (node_modules, caches, etc.)
           git rm -rf . || true
+          git clean -fdx
+
+          # copy build output only
           cp -R .dist-out/. .
 
           git add -A
