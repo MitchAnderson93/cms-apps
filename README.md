@@ -1,101 +1,95 @@
-# Turborepo starter
+# CMS Apps Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+Based on [Turborepo](https://turborepo.com/) - a high-performance build system for JavaScript and TypeScript codebases.
 
-## Using this example
+## Project Structure
 
-Run the following command:
+### Apps (`apps/`)
+Contains deployable applications:
+- **react** - React SPA (Vite)
 
-```sh
-npx create-turbo@latest
+### Packages (`packages/`)
+Shared packages used across applications:
+- **@repo/app-config** - JSON configuration files that define app context (name, version, content, theme, etc.)
+- **@repo/ui** - Shared React component library (replace with web components dependency)
+- **@repo/eslint-config** - ESLint configurations for code linting
+- **@repo/typescript-config** - Shared TypeScript configurations
+
+## Building with Configuration
+
+This monorepo uses a custom build system that allows you to build apps with specific configuration files.
+
+### Build Command
+
+```bash
+pnpm build:app --config <config-file> --app <app-name>
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+**Example:**
+```bash
+pnpm build:app --config example.json --app react
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+This command:
+1. Loads the specified config from `packages/app-config/`
+2. Passes it to the specified app during build
+3. Injects config values into the application
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Configuration Files
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+Config files live in `packages/app-config/` and define app context:
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```json
+{
+  "appName": "Example App",
+  "version": "1.0.0",
+  "theme": {
+    "customClass": ""
+  }
+}
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Apps can access these values at build time and runtime.
 
+## GitHub Actions Workflow
+
+The `.github/workflows/example-app.yml` workflow automatically:
+1. Installs dependencies with pnpm
+2. Builds the React app with the specified config
+3. Publishes the build output to the `dist` branch
+
+**Workflow trigger:**
+- Push to `development` branch
+- Manual workflow dispatch
+
+## Development
+
+Run the dev server for all apps:
+```bash
+pnpm dev
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+Run dev server for a specific app:
+```bash
+pnpm --filter react dev
 ```
 
-### Remote Caching
+## Setup
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+1. Install dependencies:
+```bash
+pnpm install
+```
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+2. Enable corepack (for pnpm):
+```bash
+corepack enable
+```
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+3. Build all packages:
+```bash
+pnpm build
+```
 
 ```
 cd my-turborepo

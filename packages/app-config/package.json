@@ -1,0 +1,9 @@
+{
+  "name": "@repo/app-config",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JSON configuration files for CMS apps",
+  "exports": {
+    "./example.json": "./example.json"
+  }
+}

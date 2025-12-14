@@ -23,7 +23,7 @@ jobs:
           corepack enable
           corepack prepare pnpm@9.15.0 --activate
           pnpm install
-          pnpm --filter react build
+          pnpm build:app --config example.json --app react
 
       - name: Stage build output + stable aliases
         run: |
