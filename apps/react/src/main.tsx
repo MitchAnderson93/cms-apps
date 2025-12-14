@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-// @ts-ignore
-import appConfig from "@config/example.json";
+
+// Config injected at build time
+declare const __APP_CONFIG__: any;
 
 function App() {
+  const config = __APP_CONFIG__ || {};
+  
   return (
-    <div style={{ padding: 24, fontFamily: "system-ui" }}>
-      <h1>{appConfig.appName}</h1>
-      <p>Version: {appConfig.version}</p>
-      <p>Custom Class: {appConfig.theme.customClass || "None"}</p>
-      <p>Config loaded from: {import.meta.env.APP_CONFIG}</p>
+    <div className={config.theme?.customClass || ""}>
+      <h2>{config.appName}</h2>
+      <p>Version: {config.version}</p>
     </div>
   );
 }

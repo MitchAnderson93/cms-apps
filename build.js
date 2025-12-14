@@ -43,13 +43,13 @@ console.log(`Building app: ${appName}`);
 console.log(`Using config: ${configFile}`);
 
 // Set environment variable for the config file
-process.env.APP_CONFIG = configFile;
+process.env.VITE_APP_CONFIG = configFile;
 
 // Run turbo build for the specific app
 try {
   execSync(`pnpm turbo run build --filter=${appName}`, {
     stdio: 'inherit',
-    env: { ...process.env, APP_CONFIG: configFile }
+    env: { ...process.env, VITE_APP_CONFIG: configFile }
   });
   console.log(`\n✓ Successfully built ${appName} with ${configFile}`);
 } catch (error) {
