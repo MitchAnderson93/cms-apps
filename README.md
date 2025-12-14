@@ -117,3 +117,16 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.com/docs/reference/configuration)
 - [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+
+## Security
+
+This project implements several security measures:
+
+- **Input Validation**: Command-line inputs are validated to prevent injection attacks
+- **XSS Prevention**: URLs in navigation are sanitized to block dangerous protocols
+- **CSP Headers**: Content Security Policy headers prevent various web attacks
+- **Security Headers**: X-Frame-Options, X-Content-Type-Options, and other protective headers
+
+For more details, see [SECURITY.md](SECURITY.md).
+
+**Important**: Never commit secrets or API keys. Config files are compiled into the application bundle, so they should only contain non-sensitive public configuration.
