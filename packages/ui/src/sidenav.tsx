@@ -34,7 +34,8 @@ function sanitizeUrl(url: string): string {
   }
   
   // Reject javascript:, data:, vbscript:, and other dangerous protocols
-  console.warn(`Blocked potentially unsafe URL: ${url}`);
+  // Don't log the actual URL to prevent exposing sensitive data in logs
+  console.warn("Blocked potentially unsafe URL with dangerous protocol");
   return "#";
 }
 

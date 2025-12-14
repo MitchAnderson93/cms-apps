@@ -3,6 +3,10 @@
 const { execSync } = require('child_process');
 const path = require('path');
 
+// Security: Regex patterns for input validation
+const VALID_CONFIG_PATTERN = /^[a-zA-Z0-9_-]+\.json$/;
+const VALID_APP_NAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
 // Parse command line arguments
 const args = process.argv.slice(2);
 let configFile = null;
@@ -25,12 +29,12 @@ if (!configFile || !appName) {
 }
 
 // Validate input to prevent path traversal and command injection
-if (!configFile.match(/^[a-zA-Z0-9_-]+\.json$/)) {
+if (!VALID_CONFIG_PATTERN.test(configFile)) {
   console.error('Error: Invalid config file name. Must be alphanumeric with .json extension.');
   process.exit(1);
 }
 
-if (!appName.match(/^[a-zA-Z0-9_-]+$/)) {
+if (!VALID_APP_NAME_PATTERN.test(appName)) {
   console.error('Error: Invalid app name. Must be alphanumeric characters only.');
   process.exit(1);
 }
