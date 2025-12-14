@@ -42,7 +42,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Use config name in branch (e.g., dist-example, dist-production)
-          DIST_BRANCH="dist-example"
+          DIST_BRANCH="dist-react"
 
           git checkout --orphan $DIST_BRANCH
           git rm -rf . || true
