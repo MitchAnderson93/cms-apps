@@ -3,5 +3,93 @@
   "version": "1.0.0",
   "theme": {
     "customClass": ""
+  },
+  "navigation": {
+    "collapseTitle": "In this section",
+    "navtitle": "Food labelling",
+    "navtitlelink": "#food-labelling",
+    "navlist": [
+      {
+        "link": "#about-food-labels",
+        "label": "About food labels",
+        "class": "",
+        "children": []
+      },
+      {
+        "link": "#do-i-need-label",
+        "label": "Do I need a label?",
+        "class": "",
+        "children": []
+      },
+      {
+        "link": "#label-buster",
+        "label": "Label Buster",
+        "class": "active",
+        "children": [
+          {
+            "link": "#terms-of-use",
+            "label": "Terms of use",
+            "class": ""
+          },
+          {
+            "link": "#about-food-labels-2",
+            "label": "About food labels",
+            "class": ""
+          },
+          {
+            "link": "#limitations",
+            "label": "Limitations",
+            "class": ""
+          },
+          {
+            "link": "#food-name",
+            "label": "Food name",
+            "class": ""
+          },
+          {
+            "link": "#business-details",
+            "label": "Business details",
+            "class": ""
+          },
+          {
+            "link": "#date-marks",
+            "label": "Date marks",
+            "class": ""
+          },
+          {
+            "link": "#storage-and-use",
+            "label": "Storage and use",
+            "class": ""
+          },
+          {
+            "link": "#ingredients",
+            "label": "Ingredients",
+            "class": ""
+          },
+          {
+            "link": "#statements",
+            "label": "Statements",
+            "class": ""
+          },
+          {
+            "link": "#your-label",
+            "label": "Your Label",
+            "class": ""
+          }
+        ]
+      },
+      {
+        "link": "#food-product-guides",
+        "label": "Food product guides",
+        "class": "",
+        "children": []
+      },
+      {
+        "link": "#kilojoule-menu-labelling",
+        "label": "Kilojoule menu labelling",
+        "class": "",
+        "children": []
+      }
+    ]
   }
 }

@@ -20,6 +20,9 @@ importers:
 
   apps/react:
     dependencies:
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -45,6 +48,8 @@ importers:
       vite:
         specifier: ^7.2.7
         version: 7.2.7(@types/node@22.15.3)
+
+  packages/app-config: {}
 
   packages/eslint-config:
     devDependencies:
