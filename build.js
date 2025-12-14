@@ -24,6 +24,17 @@ if (!configFile || !appName) {
   process.exit(1);
 }
 
+// Validate input to prevent path traversal and command injection
+if (!configFile.match(/^[a-zA-Z0-9_-]+\.json$/)) {
+  console.error('Error: Invalid config file name. Must be alphanumeric with .json extension.');
+  process.exit(1);
+}
+
+if (!appName.match(/^[a-zA-Z0-9_-]+$/)) {
+  console.error('Error: Invalid app name. Must be alphanumeric characters only.');
+  process.exit(1);
+}
+
 // Validate app exists
 const appPath = path.join(__dirname, 'apps', appName);
 const fs = require('fs');
