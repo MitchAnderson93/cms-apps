@@ -31,8 +31,9 @@ This project implements the following security measures:
 ### Content Security Policy
 - Strict CSP headers are implemented in the HTML template
 - Scripts are limited to same-origin only
-- Inline styles are controlled
+- Inline styles are controlled (note: 'unsafe-inline' is currently allowed for Vite compatibility)
 - Frame ancestors are blocked to prevent clickjacking
+- **Future Improvement**: Consider implementing CSP nonces for inline styles in production builds
 
 ### Security Headers
 - `X-Content-Type-Options: nosniff` - Prevents MIME type sniffing
@@ -54,6 +55,7 @@ When contributing to this project:
 3. **Use dependencies carefully** - Only add well-maintained, trusted packages
 4. **Keep dependencies updated** - Regularly update to patch security vulnerabilities
 5. **Review config files** - Config files are compiled into the bundle, so ensure they don't contain sensitive data
+6. **Monitor security events** - In production, implement proper logging infrastructure to capture security warnings (currently using console.warn for development)
 
 ## Environment Variables
 
