@@ -21,9 +21,7 @@ Shared packages used across applications:
 - **pnpm** 9.0.0 or later
 
 Install pnpm if you don't have it:
-```bash
-npm install -g pnpm
-```
+https://pnpm.io/installation
 
 ## Setup & Local Development
 
