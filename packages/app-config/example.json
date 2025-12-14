@@ -2,21 +2,22 @@
   "appName": "Example App",
   "version": "1.0.0",
   "theme": {
-    "customClass": ""
+    "customClass": "--dark"
   },
   "navigation": {
+    "enabled": true,
     "collapseTitle": "In this section",
     "navtitle": "Food labelling",
-    "navtitlelink": "#food-labelling",
+    "navtitlelink": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling",
     "navlist": [
       {
-        "link": "#about-food-labels",
+        "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/about-food-labels",
         "label": "About food labels",
         "class": "",
         "children": []
       },
       {
-        "link": "#do-i-need-label",
+        "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/do-I-need-a-label",
         "label": "Do I need a label?",
         "class": "",
         "children": []
@@ -79,13 +80,13 @@
         ]
       },
       {
-        "link": "#food-product-guides",
+        "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/food-product-guides",
         "label": "Food product guides",
         "class": "",
         "children": []
       },
       {
-        "link": "#kilojoule-menu-labelling",
+        "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/kilojoule-menu-labelling",
         "label": "Kilojoule menu labelling",
         "class": "",
         "children": []

@@ -29,15 +29,8 @@ function NavList({ items, level = 1 }: { items: NavItem[]; level?: number }) {
             {isActive ? (
               <span className="nav-link">{item.label}</span>
             ) : (
-              <a
-                className="nav-link"
-                href={item.link}
-                target={item.target || undefined}
-              >
-                {item.label}
-              </a>
+              <a className="nav-link" href={item.link} target={item.target || ""}>{item.label}</a>
             )}
-            
             {item.children && item.children.length > 0 && (
               <NavList items={item.children} level={level + 1} />
             )}
