@@ -1,9 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Sidenav } from "@repo/ui";
 
 // Config injected at build time
 declare const __APP_CONFIG__: any;
+
+function PageContent() {
+  const location = useLocation();
+  const config = __APP_CONFIG__ || {};
+  const pages = config.pages || [];
+  
+  const currentPage = pages.find((p: any) => p.path === location.pathname);
+  
+  if (!currentPage) {
+    return (
+      <>
+        <h1>Welcome</h1>
+        <p>Select a page from the navigation.</p>
+      </>
+    );
+  }
+  
+  return (
+    <>
+      <h1>{currentPage.title}</h1>
+      <p>{currentPage.content}</p>
+    </>
+  );
+}
 
 function App() {
   const config = __APP_CONFIG__ || {};
@@ -18,6 +43,7 @@ function App() {
       <div className="row">
         <div className="col-12">
           {/* Debug: {config.appName} v{config.version} */}
+          <PageContent />
         </div>
       </div>
     );
@@ -36,13 +62,30 @@ function App() {
       </div>
       <div className="col-12 col-lg-9 order-lg-last ps-lg-72">
         {/* Debug: {config.appName} v{config.version} */}
+        <PageContent />
       </div>
     </div>
   );
 }
 
+function AppWithRouter() {
+  const config = __APP_CONFIG__ || {};
+  const pages = config.pages || [];
+  
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        {pages.map((page: any) => (
+          <Route key={page.path} path={page.path} element={<App />} />
+        ))}
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <AppWithRouter />
   </React.StrictMode>
 );
