@@ -72,8 +72,12 @@ function AppWithRouter() {
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
   
+  // Use VITE_PUBLIC_URL from env (set via build.js for deployment, .env for local)
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const basePath = publicUrl ? `https://www.qld.gov.au/${publicUrl}` : "/";
+  
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basePath}>
       <Routes>
         <Route path="/" element={<App />} />
         {pages.map((page: any) => (

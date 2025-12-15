@@ -42,14 +42,23 @@ if (!fs.existsSync(configPath)) {
 console.log(`Building app: ${appName}`);
 console.log(`Using config: ${configFile}`);
 
-// Set environment variable for the config file
-process.env.VITE_APP_CONFIG = configFile;
+// Pass through environment variables for Vite
+const buildEnv = { 
+  ...process.env, 
+  VITE_APP_CONFIG: configFile
+};
+
+// Pass through PUBLIC_URL if set (for deployment)
+if (process.env.PUBLIC_URL) {
+  buildEnv.VITE_PUBLIC_URL = process.env.PUBLIC_URL;
+  console.log(`Using PUBLIC_URL: ${process.env.PUBLIC_URL}`);
+}
 
 // Run turbo build for the specific app
 try {
   execSync(`pnpm turbo run build --filter=${appName}`, {
     stdio: 'inherit',
-    env: { ...process.env, VITE_APP_CONFIG: configFile }
+    env: buildEnv
   });
   console.log(`\n✓ Successfully built ${appName} with ${configFile}`);
 } catch (error) {

@@ -143,6 +143,11 @@
       "path": "/your-label",
       "title": "Your Label",
       "content": "Your label information."
+    },
+    {
+      "path": "/example-page",
+      "title": "Example Page",
+      "content": "This is an example page."
     }
   ]
 }
