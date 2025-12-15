@@ -28,52 +28,52 @@
         "class": "active",
         "children": [
           {
-            "link": "#terms-of-use",
+            "link": "/terms-of-use",
             "label": "Terms of use",
             "class": ""
           },
           {
-            "link": "#about-food-labels-2",
+            "link": "/about-food-labels",
             "label": "About food labels",
             "class": ""
           },
           {
-            "link": "#limitations",
+            "link": "/limitations",
             "label": "Limitations",
             "class": ""
           },
           {
-            "link": "#food-name",
+            "link": "/food-name",
             "label": "Food name",
             "class": ""
           },
           {
-            "link": "#business-details",
+            "link": "/business-details",
             "label": "Business details",
             "class": ""
           },
           {
-            "link": "#date-marks",
+            "link": "/date-marks",
             "label": "Date marks",
             "class": ""
           },
           {
-            "link": "#storage-and-use",
+            "link": "/storage-and-use",
             "label": "Storage and use",
             "class": ""
           },
           {
-            "link": "#ingredients",
+            "link": "/ingredients",
             "label": "Ingredients",
             "class": ""
           },
           {
-            "link": "#statements",
+            "link": "/statements",
             "label": "Statements",
             "class": ""
           },
           {
-            "link": "#your-label",
+            "link": "/your-label",
             "label": "Your Label",
             "class": ""
           }
@@ -92,5 +92,57 @@
         "children": []
       }
     ]
-  }
+  },
+  "pages": [
+    {
+      "path": "/terms-of-use",
+      "title": "Terms of use",
+      "content": "Terms of use content goes here."
+    },
+    {
+      "path": "/about-food-labels",
+      "title": "About food labels",
+      "content": "Information about food labels."
+    },
+    {
+      "path": "/limitations",
+      "title": "Limitations",
+      "content": "Limitations information."
+    },
+    {
+      "path": "/food-name",
+      "title": "Food name",
+      "content": "Food name requirements."
+    },
+    {
+      "path": "/business-details",
+      "title": "Business details",
+      "content": "Business details information."
+    },
+    {
+      "path": "/date-marks",
+      "title": "Date marks",
+      "content": "Date marks information."
+    },
+    {
+      "path": "/storage-and-use",
+      "title": "Storage and use",
+      "content": "Storage and use information."
+    },
+    {
+      "path": "/ingredients",
+      "title": "Ingredients",
+      "content": "Ingredients information."
+    },
+    {
+      "path": "/statements",
+      "title": "Statements",
+      "content": "Statements information."
+    },
+    {
+      "path": "/your-label",
+      "title": "Your Label",
+      "content": "Your label information."
+    }
+  ]
 }
