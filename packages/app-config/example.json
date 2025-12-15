@@ -28,52 +28,52 @@
         "class": "active",
         "children": [
           {
-            "link": "/app/terms-of-use",
+            "link": "/terms-of-use",
             "label": "Terms of use",
             "class": ""
           },
           {
-            "link": "/app/about-food-labels",
+            "link": "/about-food-labels",
             "label": "About food labels",
             "class": ""
           },
           {
-            "link": "/app/limitations",
+            "link": "/limitations",
             "label": "Limitations",
             "class": ""
           },
           {
-            "link": "/app/food-name",
+            "link": "/food-name",
             "label": "Food name",
             "class": ""
           },
           {
-            "link": "/app/business-details",
+            "link": "/business-details",
             "label": "Business details",
             "class": ""
           },
           {
-            "link": "/app/date-marks",
+            "link": "/date-marks",
             "label": "Date marks",
             "class": ""
           },
           {
-            "link": "/app/storage-and-use",
+            "link": "/storage-and-use",
             "label": "Storage and use",
             "class": ""
           },
           {
-            "link": "/app/ingredients",
+            "link": "/ingredients",
             "label": "Ingredients",
             "class": ""
           },
           {
-            "link": "/app/statements",
+            "link": "/statements",
             "label": "Statements",
             "class": ""
           },
           {
-            "link": "/app/your-label",
+            "link": "/your-label",
             "label": "Your Label",
             "class": ""
           }
@@ -95,57 +95,57 @@
   },
   "pages": [
     {
-      "path": "/app/terms-of-use",
+      "path": "/terms-of-use",
       "title": "Terms of use",
       "content": "Terms of use content goes here."
     },
     {
-      "path": "/app/about-food-labels",
+      "path": "/about-food-labels",
       "title": "About food labels",
       "content": "Information about food labels."
     },
     {
-      "path": "/app/limitations",
+      "path": "/limitations",
       "title": "Limitations",
       "content": "Limitations information."
     },
     {
-      "path": "/app/food-name",
+      "path": "/food-name",
       "title": "Food name",
       "content": "Food name requirements."
     },
     {
-      "path": "/app/business-details",
+      "path": "/business-details",
       "title": "Business details",
       "content": "Business details information."
     },
     {
-      "path": "/app/date-marks",
+      "path": "/date-marks",
       "title": "Date marks",
       "content": "Date marks information."
     },
     {
-      "path": "/app/storage-and-use",
+      "path": "/storage-and-use",
       "title": "Storage and use",
       "content": "Storage and use information."
     },
     {
-      "path": "/app/ingredients",
+      "path": "/ingredients",
       "title": "Ingredients",
       "content": "Ingredients information."
     },
     {
-      "path": "/app/statements",
+      "path": "/statements",
       "title": "Statements",
       "content": "Statements information."
     },
     {
-      "path": "/app/your-label",
+      "path": "/your-label",
       "title": "Your Label",
       "content": "Your label information."
     },
     {
-      "path": "/app/example-page",
+      "path": "/example-page",
       "title": "Example Page",
       "content": "This is an example page."
     }
