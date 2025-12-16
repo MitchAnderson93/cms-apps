@@ -1,6 +1,7 @@
 {
   "appName": "Example App",
   "version": "1.0.0",
+  "defaultPage": "/example-page",
   "theme": {
     "customClass": "--dark"
   },

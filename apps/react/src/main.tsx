@@ -11,13 +11,19 @@ function PageContent() {
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
   
-  const currentPage = pages.find((p: any) => p.path === location.pathname);
+  // Use defaultPage for root path, or find matching page
+  let currentPage = pages.find((p: any) => p.path === location.pathname);
+  
+  // If we're at root and no root page exists, use defaultPage
+  if (!currentPage && location.pathname === "/" && config.defaultPage) {
+    currentPage = pages.find((p: any) => p.path === config.defaultPage);
+  }
   
   if (!currentPage) {
     return (
       <>
-        <h1>Welcome</h1>
-        <p>Select a page from the navigation.</p>
+        <h1>Page Not Found</h1>
+        <p>The page "{location.pathname}" does not exist.</p>
       </>
     );
   }
@@ -83,6 +89,7 @@ function AppWithRouter() {
         {pages.map((page: any) => (
           <Route key={page.path} path={page.path} element={<App />} />
         ))}
+        <Route path="*" element={<App />} />
       </Routes>
     </BrowserRouter>
   );
