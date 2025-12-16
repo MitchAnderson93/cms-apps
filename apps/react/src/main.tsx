@@ -10,13 +10,20 @@ function PageContent() {
   const location = useLocation();
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
+  const defaultPage = config.defaultPage || "/";
   
-  // Use defaultPage for root path, or find matching page
+  // Check if current path matches a page directly, or if it's nested under defaultPage
   let currentPage = pages.find((p: any) => p.path === location.pathname);
   
-  // If we're at root and no root page exists, use defaultPage
-  if (!currentPage && location.pathname === "/" && config.defaultPage) {
-    currentPage = pages.find((p: any) => p.path === config.defaultPage);
+  // If at root, use defaultPage
+  if (!currentPage && location.pathname === "/") {
+    currentPage = pages.find((p: any) => p.path === defaultPage);
+  }
+  
+  // If not found and we have a defaultPage, try treating path as nested under defaultPage
+  if (!currentPage && defaultPage && defaultPage !== "/") {
+    const nestedPath = `${defaultPage}${location.pathname}`;
+    currentPage = pages.find((p: any) => p.path === nestedPath);
   }
   
   if (!currentPage) {
