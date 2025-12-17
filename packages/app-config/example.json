@@ -26,7 +26,7 @@
       {
         "link": "#label-buster",
         "label": "Label Buster",
-        "class": "active",
+        "class": "",
         "children": [
           {
             "link": "/terms-of-use",
