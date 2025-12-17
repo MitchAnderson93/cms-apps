@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Sidenav } from "@repo/ui";
 
 // Config injected at build time
@@ -10,21 +10,8 @@ function PageContent() {
   const location = useLocation();
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
-  const defaultPage = config.defaultPage || "/";
   
-  // Check if current path matches a page directly, or if it's nested under defaultPage
-  let currentPage = pages.find((p: any) => p.path === location.pathname);
-  
-  // If at root, use defaultPage
-  if (!currentPage && location.pathname === "/") {
-    currentPage = pages.find((p: any) => p.path === defaultPage);
-  }
-  
-  // If not found and we have a defaultPage, try treating path as nested under defaultPage
-  if (!currentPage && defaultPage && defaultPage !== "/") {
-    const nestedPath = `${defaultPage}${location.pathname}`;
-    currentPage = pages.find((p: any) => p.path === nestedPath);
-  }
+  const currentPage = pages.find((p: any) => p.path === location.pathname);
   
   if (!currentPage) {
     return (
@@ -47,7 +34,6 @@ function App() {
   const config = __APP_CONFIG__ || {};
   const nav = config.navigation || {};
   const sidenavEnabled = nav.enabled === true;
-  
   // Debug: {config.appName} v{config.version}
   
   if (!sidenavEnabled) {
@@ -85,12 +71,8 @@ function AppWithRouter() {
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
   
-  // Use VITE_PUBLIC_URL from env (set via build.js for deployment, .env for local)
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-  const basePath = publicUrl ? `/${publicUrl}` : "/";
-  
   return (
-    <BrowserRouter basename={basePath}>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<App />} />
         {pages.map((page: any) => (
@@ -98,7 +80,7 @@ function AppWithRouter() {
         ))}
         <Route path="*" element={<App />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

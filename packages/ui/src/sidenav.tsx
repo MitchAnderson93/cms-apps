@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface NavItem {
   label: string;
@@ -23,13 +24,16 @@ function NavList({ items, level = 1 }: { items: NavItem[]; level?: number }) {
     <ul className={ulClass} aria-label={ariaLabel}>
       {items.map((item, index) => {
         const isActive = item.class?.includes("active");
+        const isExternal = item.link.startsWith("http") || item.link.startsWith("#");
         
         return (
           <li key={index} className={`nav-item ${item.class || ""}`}>
             {isActive ? (
               <span className="nav-link">{item.label}</span>
-            ) : (
+            ) : isExternal ? (
               <a className="nav-link" href={item.link} target={item.target || ""}>{item.label}</a>
+            ) : (
+              <Link className="nav-link" to={item.link}>{item.label}</Link>
             )}
             {item.children && item.children.length > 0 && (
               <NavList items={item.children} level={level + 1} />
