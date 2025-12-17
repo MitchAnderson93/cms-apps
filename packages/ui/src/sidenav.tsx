@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 interface NavItem {
@@ -17,7 +17,7 @@ interface SidenavProps {
 }
 
 function NavList({ items, level = 1 }: { items: NavItem[]; level?: number }) {
-  const ulClass = level === 3 ? "with-stalks" : level > 1 ? "" : "nav";
+  const ulClass = level === 3 ? "with-stalks" : level === 1 ? "nav" : undefined;
   const ariaLabel = level === 1 ? "section navigation" : undefined;
   
   return (
@@ -51,22 +51,21 @@ export function Sidenav({
   navtitlelink,
   navlist
 }: SidenavProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   return (
     <nav className="qld-side-navigation" aria-label="Side Navigation">
       <button
-        className={`accordion-button ${isExpanded ? "" : "collapsed"} d-lg-none`}
+        className="accordion-button collapsed d-lg-none"
         type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
-        aria-expanded={isExpanded}
+        data-bs-toggle="collapse"
+        data-bs-target="#sideNavCollapse"
+        aria-expanded="false"
         aria-controls="sideNavCollapse"
       >
         {collapseTitle}
       </button>
       
       <div
-        className={`nav-wrapper ${isExpanded ? "" : "collapse"} d-lg-block`}
+        className="nav-wrapper collapse d-lg-block"
         id="sideNavCollapse"
       >
         <h2 className="nav-title">
