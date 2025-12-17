@@ -29,11 +29,11 @@ jobs:
         run: |
           rm -rf /tmp/dist
           mkdir -p /tmp/dist
-          cp -R apps/react/dist/. /tmp/dist/
+          cp -R apps/react/dist/assets/. /tmp/dist/
 
-          cp "$(ls -1 /tmp/dist/assets/*.js 2>/dev/null | head -n 1)" /tmp/dist/dist.js
-          if ls -1 /tmp/dist/assets/*.css >/dev/null 2>&1; then
-            cp "$(ls -1 /tmp/dist/assets/*.css | head -n 1)" /tmp/dist/dist.css
+          cp "$(ls -1 /tmp/dist/*.js 2>/dev/null | head -n 1)" /tmp/dist/dist.js
+          if ls -1 /tmp/dist/*.css >/dev/null 2>&1; then
+            cp "$(ls -1 /tmp/dist/*.css | head -n 1)" /tmp/dist/dist.css
           fi
 
       - name: Publish to dist branch
