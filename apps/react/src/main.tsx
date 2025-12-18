@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Routes, Route, Link, useLocation } from "react-router-dom";
-import { Sidenav } from "@repo/ui";
+import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { Sidenav, InpageAlert } from "@repo/ui";
 
 // Config injected at build time
 declare const __APP_CONFIG__: any;
 
 function PageContent() {
   const location = useLocation();
+  const navigate = useNavigate();
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
   
   const currentPage = pages.find((p: any) => p.path === location.pathname);
   
+  // Redirect / to first page
+  useEffect(() => {
+    if (location.pathname === "/" && pages.length > 0) {
+      navigate(pages[0].path, { replace: true });
+    }
+  }, [location.pathname, pages, navigate]);
+  
   if (!currentPage) {
+    // If we're at / and about to redirect, show loading
+    if (location.pathname === "/" && pages.length > 0) {
+      return <p>Loading...</p>;
+    }
     return (
       <>
         <h1>Page Not Found</h1>
@@ -22,10 +34,32 @@ function PageContent() {
     );
   }
   
+  // Support both old string content and new array content
+  const contentArray = Array.isArray(currentPage.content) 
+    ? currentPage.content 
+    : [{ type: "text", content: currentPage.content }];
+  
   return (
     <>
       <h1>{currentPage.title}</h1>
-      <p>{currentPage.content}</p>
+      {contentArray.map((item: any, index: number) => {
+        switch (item.type) {
+          case "inpage-alert":
+            return (
+              <InpageAlert
+                key={index}
+                type={item.alertType || "info"}
+                heading={item.heading}
+                content={item.content}
+              />
+            );
+          case "html":
+            return <div key={index} dangerouslySetInnerHTML={{ __html: item.content }} />;
+          case "text":
+          default:
+            return <p key={index}>{item.content}</p>;
+        }
+      })}
     </>
   );
 }
@@ -51,7 +85,7 @@ function App() {
   // Column layout with sidenav
   return (
     <div className="row">
-      <div className="col-12 col-lg-3 order-lg-first">
+      <div className="col-12 col-lg-3 pe-lg-0 order-last order-lg-first mt-40 mt-lg-0">
         <Sidenav
           collapseTitle={nav.collapseTitle}
           navtitle={nav.navtitle || "Navigation"}
@@ -59,7 +93,7 @@ function App() {
           navlist={nav.navlist || []}
         />
       </div>
-      <div className="col-12 col-lg-9 order-lg-last ps-lg-72">
+      <div className="col-12 ps-lg-64 col-lg-6 qld-content-body">
         {/* Debug: {config.appName} v{config.version} */}
         <PageContent />
       </div>
