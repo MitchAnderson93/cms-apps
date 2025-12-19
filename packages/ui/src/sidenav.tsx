@@ -14,9 +14,10 @@ interface SidenavProps {
   navtitle: string;
   navtitlelink?: string;
   navlist: NavItem[];
+  disabledPaths?: string[]; // Array of paths that should be disabled
 }
 
-function NavList({ items, level = 1 }: { items: NavItem[]; level?: number }) {
+function NavList({ items, level = 1, disabledPaths = [] }: { items: NavItem[]; level?: number; disabledPaths?: string[] }) {
   const ulClass = level === 3 ? "with-stalks" : level === 1 ? "nav" : undefined;
   const ariaLabel = level === 1 ? "section navigation" : undefined;
   
@@ -25,18 +26,21 @@ function NavList({ items, level = 1 }: { items: NavItem[]; level?: number }) {
       {items.map((item, index) => {
         const isActive = item.class?.includes("active");
         const isExternal = item.link.startsWith("http") || item.link.startsWith("#");
+        const isDisabled = disabledPaths.includes(item.link);
         
         return (
           <li key={index} className={`nav-item ${item.class || ""}`}>
             {isActive ? (
               <span className="nav-link">{item.label}</span>
+            ) : isDisabled ? (
+              <span className="nav-link disabled">{item.label}</span>
             ) : isExternal ? (
               <a className="nav-link" href={item.link} target={item.target || ""}>{item.label}</a>
             ) : (
               <Link className="nav-link" to={item.link}>{item.label}</Link>
             )}
             {item.children && item.children.length > 0 && (
-              <NavList items={item.children} level={level + 1} />
+              <NavList items={item.children} level={level + 1} disabledPaths={disabledPaths} />
             )}
           </li>
         );
@@ -49,7 +53,8 @@ export function Sidenav({
   collapseTitle = "In this section",
   navtitle,
   navtitlelink,
-  navlist
+  navlist,
+  disabledPaths = []
 }: SidenavProps) {
   return (
     <nav className="qld-side-navigation" aria-label="Side Navigation">
@@ -78,7 +83,7 @@ export function Sidenav({
           )}
         </h2>
 
-        <NavList items={navlist} />
+        <NavList items={navlist} disabledPaths={disabledPaths} />
       </div>
     </nav>
   );

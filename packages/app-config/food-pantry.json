@@ -1,0 +1,126 @@
+{
+  "appName": "Example App",
+  "version": "1.0.0",
+  "defaultPage": "/example-page",
+  "theme": { "customClass": "--dark" },
+  "navigation": {
+    "enabled": true,
+    "collapseTitle": "In this section",
+    "navtitle": "Food labelling",
+    "navtitlelink": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling",
+    "navlist": [
+      { "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/about-food-labels", "label": "About food labels", "class": "", "children": [] },
+      { "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/do-I-need-a-label", "label": "Do I need a label?", "class": "", "children": [] },
+      { "link": "/label-buster", "label": "Label Buster", "class": "", "children": [
+        { "link": "/terms-of-use", "label": "Terms of use", "class": "" },
+        { "link": "/about-food-labels", "label": "About food labels", "class": "" },
+        { "link": "/limitations", "label": "Limitations", "class": "" },
+        { "link": "/food-name", "label": "Food name", "class": "" },
+        { "link": "/business-details", "label": "Business details", "class": "" },
+        { "link": "/date-marks", "label": "Date marks", "class": "" },
+        { "link": "/storage-and-use", "label": "Storage and use", "class": "" },
+        { "link": "/ingredients", "label": "Ingredients", "class": "" },
+        { "link": "/statements", "label": "Statements", "class": "" },
+        { "link": "/your-label", "label": "Your Label", "class": "" }
+      ] },
+      { "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/food-product-guides", "label": "Food product guides", "class": "", "children": [] },
+      { "link": "https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/kilojoule-menu-labelling", "label": "Kilojoule menu labelling", "class": "", "children": [] }
+    ]
+  },
+  "helpGuide": {
+    "sections": [
+      {
+        "id": "getting-started",
+        "title": "Getting started",
+        "content": "<p>Welcome to the Help Guide. Use the links labelled helpGuide#section in the app to open this panel and jump to a section.</p><p>Try it from any page with a <a href=\"helpGuide#getting-started\">Getting started</a> link.</p>"
+      },
+      {
+        "id": "faq",
+        "title": "FAQs",
+        "content": "<p><strong>Who is Label Buster for?</strong></p><p>It is designed for small to medium food businesses. Complex products may require professional advice.</p><p><strong>Does it include allergen guidance?</strong></p><p>Yes, refer to the Allergen labelling fact sheet after completing the tool.</p>"
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "content": "<p>Need more help? Email <a href=\"mailto:foodsafety@health.qld.gov.au\">foodsafety@health.qld.gov.au</a> or call (07) 3328 9310.</p>"
+      }
+    ]
+  },
+  "pages": [
+    { "path": "/label-buster", "title": "Label Buster", "content": [
+      { "type": "html", "content": "<p>Label Buster is a step-by-step guide to help you identify the information you need to create a food label that meets Australian requirements. At the end of Label Buster, you will generate:</p><ul><li>a product sheet you can give to a printer to design a label for you</li><li>an example of what your food label should look like.</li></ul><p>The <a href=\"https://www.foodstandards.gov.au/code/Pages/default.aspx\" rel=\"nofollow\" target=\"_blank\" class=\"external-link\"><span class=\"title\"><i>Australia New Zealand Food Standards Code</i></span></a> (the Food Standards Code) sets the standards for food labelling in Australia. Significant penalties apply in Queensland under the Food Act 2006 (the Act), for non-compliance with the Food Standards Code.</p>" },
+      { "type": "inpage-alert", "alertType": "info", "heading": "Did you know", "content": "<p>Labels must have the same information whether you sell your product once at a market stall, or regularly to a supermarket.</p>" },
+      { "type": "html", "content": "<h2>Who can use Label Buster?</h2>" },
+      { "type": "html", "content": "<p>Label Buster is designed for small to medium food businesses. If your food has complex labelling requirements, such as infant formula, sports supplements or alcohol, the tool does not provide all the information you need, and you are recommended to seek professional legal advice from a food labelling consultant.</p>" },
+      { "type": "inpage-alert", "alertType": "info", "heading": "Before you start", "content": "<p>To use Label Buster, you will need:</p><p>Up to 1 hour - if you are familiar with food labelling requirements.</p><p>Up to 2 hours - if you have never made a food label before.</p><p>You will need information about your food, such as:</p><ul><li>ingredients</li><li>use-by or best-before dates</li><li>any storage conditions or directions for use</li></ul><p>The questions marked with a * must be completed. Other questions are optional.</p>" },
+      { "type": "html", "content": "<p><i>PLEASE NOTE: The Label Buster tool is in the process of being updated to incorporate the Plain English Allergen Labelling (PEAL) provisions of the Australia New Zealand Food Standards Code that came into effect on 25 February 2024.</i></p>" },
+      { "type": "html", "content": "<p><i>IMPORTANT: After you have completed Label Buster, you will need to refer to the <a href=\"https://www.health.qld.gov.au/__data/assets/pdf_file/0030/1126947/allergen-labelling.pdf\" class=\"external-link\">Allergen labelling fact sheet</a> to make the required PEAL changes to your draft food label and ensure you have a label that is compliant with the Food Standards Code.</i></p>" },
+      { "type": "html", "content": "<p><i>If your food contains any allergens, this will mainly involve changing the format of the ingredient list and including an allergy ‘summary statement’. It should only take an additional <srong>5-10 minutes.</strong></i></p>" },
+      { "type": "html", "content": "<p>Another resource you may find helpful is <a href=\"https://www.foodstandards.gov.au/business/labelling/allergen-labelling\" class=\"external-link\">Allergen labelling for food businesses</a>, which is available on the Food Standards Australia New Zealand website.</p>" },
+      { "type": "html", "content": "<p>If you have trouble or have any further questions in relation to incorporating the allergen requirements into your label, please contact the Food Safety Standards and Regulation Unit via <a href=\"mailto:foodsafety@health.qld.gov.au\">foodsafety@health.qld.gov.au</a> or phone (07) 3328 9310.</p>" },
+      { "type": "inpage-alert", "alertType": "info", "heading": "Did you know", "content": "<p>Label Buster will provide you with food labelling information to help you to comply with the Food Standards Code. After you finish Label Buster, you will need to include other mandatory requirements for a Nutrition Information Panel , weights and measures , and Country of origin  labelling. Health Star Rating  is a voluntary scheme you can choose to add to your food.</p>" },
+      { "type": "button", "text": "Start", "link": "/terms-of-use", "variant": "primary", "size": "" }
+    ] },
+    { "path": "/terms-of-use", "title": "Terms of use", "content": [
+      { "type": "html", "content": "<p>Please read and accept the terms of use before using Label Buster.</p>" },
+      { "type": "html", "content": "<ul><li><a href=\"https://www.qld.gov.au/legal/disclaimer\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Terms and conditions</a></li><li><a href=\"https://www.qld.gov.au/legal/privacy\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Privacy statement</a></li><li><a href=\"https://www.qld.gov.au/legal/disclaimer\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Disclaimer</a></li><li><a href=\"https://www.qld.gov.au/legal/copyright\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Copyright</a></li></ul>" },
+      { "type": "inpage-alert", "alertType": "warning", "heading": "Warning", "content": "<p>Label Buster does not replace information provided by Food Standards Australia New Zealand (FSANZ) about labelling requirements. Any reference you make to the Food Standards Code does not relieve you of your responsibility to review all current legislative requirements that apply to your business.</p>" },
+      { "type": "html", "content": "<p>Your privacy is important to us. Please refer to the Queensland Government's <a href=\"https://www.qld.gov.au/legal/privacy\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">privacy statement</a>.</p>" },
+      { "type": "html", "content": "<p>All the labelling requirements in this tool are current for packaged food labelling requirements. These requirements can be found in Part 1.2 - Labelling and Other Information Requirements of the Food Standards Code. The labelling requirements provided from this tool do not include:</p><ul><li>nutrition information panel requirements (Standard 1.2.8)</li><li>legibility requirements (Standard 1.2.9)</li><li>percentage labelling requirements (Standard 1.2.10)</li><li>country of origin requirements (Standard 1.2.11).</li></ul>" },
+      { "type": "html", "content": "<p>This tool does not provide requirements for unpackaged foods. Contact the <a href=\"https://www.health.qld.gov.au/system-governance/health-regulation/regulation-safety-standards/food-safety-regulation/contacts\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Food Safety Standards and Regulation Unit</a> for information on unpackaged food labelling requirements.</p>" },
+      { "type": "html", "content": "<p>This tool only provides summary information in relation to allergen labelling. For detailed information you should refer to <a href=\"https://www.foodstandards.gov.au/business/labelling/allergen-labelling\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Allergen labelling for food businesses</a> on the FSANZ website and the Queensland Health <a href=\"https://www.health.qld.gov.au/__data/assets/pdf_file/0030/1126947/allergen-labelling.pdf\" target=\"_blank\" rel=\"nofollow\" class=\"external-link\">Allergen labelling fact sheet</a>.</p>" },
+      { "type": "checkbox", "id": "terms-accepted", "label": "I have read the terms of use for Label Buster", "required": true },
+      { "type": "button-group", "validateCheckbox": "terms-accepted", "buttons": [
+        { "text": "Back", "link": "/label-buster", "variant": "secondary", "action": "navigate" },
+        { "text": "Accept", "link": "/about-food-labels", "variant": "primary", "action": "navigate", "requiresValidation": true },
+        { "text": "Cancel", "link": "/label-buster", "variant": "link", "action": "cancel" }
+      ] }
+    ] },
+    { "path": "/about-food-labels", "title": "About food labels", "content": [
+      { "type": "html", "content": "<p>Select on the food label sections below to learn about labels.</p>" },
+      { "type": "image", "src": "https://www.qld.gov.au/?a=148648", "alt": "An example label for strawberry yoghurt" },
+      { "type": "accordion", "id": "about-food-labels", "items": [
+        { "title": "1. Food name and description", "content": "<p>Food labels must show the name of the food to help identify the food.</p><p>The name and description of the food must reflect its true nature. For example, strawberry yoghurt must contain strawberries. If the yoghurt contained strawberry flavouring rather than real fruit, then the name would need to indicate that it is strawberry-flavoured yoghurt.</p><figure><img src=\"https://www.qld.gov.au/?a=145669\" alt=\"Example food label with a food name and description.\"></figure><p>If the name of the food does not reflect its true nature, then you must include a description of the true nature on the label. For example, Luke’s Hot’s Sauce (<i>red chilli pepper sauce</i>).</p>" },
+        { "title": "2. Business details", "content": "<p>To help customers identify where food has come from or to use for a food recall when food is unsafe, a food label must include the following business details:</p><ul><li>name of the business supplying the food</li><li>business address in Australia or New Zealand, or a description of the location, of the premises where the business is being operated. A postal address cannot be used.</li></ul><figure><img src=\"https://www.qld.gov.au/?a=145666\" alt=\"Example food label with the business name and the street address of the food business.\"></figure>" },
+        { "title": "3. Weights", "content": "<p>The National Measurement Institute is responsible for making sure food is measured and weighed correctly, and that the food is labelled with the correct weight and unit.</p><p>For example, food labelled as being 500g should weigh 500g and use the metric system of grams (g), kilograms (kg), millilitres (mL), litres (L), etc.</p><p>Visit the <a href=\"https://www.industry.gov.au/regulations-and-standards/buying-and-selling-goods-and-services-by-weights-and-other-measures\" target=\"_blank\">NMI website</a> for more information on how to comply with the laws around weights and other measures.</p><figure><img src=\"https://www.qld.gov.au/?a=145675\" alt=\"Example food label with the weight of the food.\"></figure>" },
+        { "title": "4. Date marks", "content": "<p>Food packaged with a shelf life of 2 years or less must show a date mark.</p><p>Foods that should be eaten before a certain date for health and safety reasons must be labelled with a use-by date. Otherwise, a best-before date is required if the food has a shelf life of less than 2 years. Although it may be safe to eat the food after the best-before date, the food may have lost quality or some nutritional value.</p><p>Bread with a shelf-life of less than 7 days, can use a baked-for date or baked-on date instead of a best-before date.</p><figure><img src=\"https://www.qld.gov.au/?a=145668\" alt=\"Example food label with a date mark such as a use by date, best before date, baked on, or baked for date.\"></figure>" },
+        { "title": "5. Lot identification", "content": "<p>The lot identification means a number or other information that identifies where the food was made and the batch it was part of. It is not always necessary to include a lot identification on a label if a date mark, business name and address can identify the food. If date marking is not required, lot identification must be added so that the food can be identified.</p><figure><img src=\"https://www.qld.gov.au/?a=145672\" alt=\"Example food label with the lot identification.\"></figure>" },
+        { "title": "6. Storage conditions and directions for use", "content": "<p><b>Storage conditions</b><br>To keep food until its best-before or use-by date include storage conditions on your label.</p><p><b>Directions for use</b><br>A food label must have directions on how to use or prepare the food if needed for health and safety reasons.</p><figure><img src=\"https://www.qld.gov.au/?a=145674\" alt=\"Example food label with storage conditions and directions for use.\"></figure>" },
+        { "title": "7. Ingredients", "content": "<p>A food label must contain a list of ingredients. The Food Standards Code has rules that describe how each ingredient must be listed, how it is named, extra requirements if an ingredient contains allergens, and how the list is formatted.</p><figure><img src=\"https://www.qld.gov.au/?a=145670\" alt=\"Example food label with a list of ingredients.\"></figure>" },
+        { "title": "8. Advisory statements, warning statements and declarations", "content": "<p>To help consumers avoid foods that are not safe for them to eat due to health conditions they may have, the Food Standards Code lists mandatory advisory statements, warning statements and allergen declarations that must be shown on a food label depending on the type of food and its ingredients.</p><figure><img src=\"https://www.qld.gov.au/?a=145673\" alt=\"Example food label with advisory statements, warning statements and declarations.\"></figure>" },
+        { "title": "9. Nutrition information panel", "content": "<p>The nutrition information panel (NIP) shows the number of servings in the package and the average amounts in a serving of food and per 100 grams (or 100 millilitres) of food for:</p><ul><li>energy (in kilojoules)</li><li>protein</li><li>fat (including saturated fat)</li><li>carbohydrates (including sugars)</li><li>sodium</li></ul><figure><img src=\"https://www.qld.gov.au/?a=145671\" alt=\"Example food label with nutrition information panel.\"></figure><p>If a nutrition, health or related claim is made, the NIP must also show the amount of nutrient or substance. For example: the amount of calcium must be shown in the nutrition information panel if a claim about calcium is made.</p>" },
+        { "title": "10. Claims", "content": "<p>There are strict requirements about claims that can be made and how they should be written on a label.</p><p>Nutrition content claims are claims about the content of certain nutrients or substances in a food. For example, contains calcium.</p><p>Health claims refer to a relationship between food and health. For example, calcium for bone and teeth.</p><figure><img src=\"https://www.qld.gov.au/?a=145667\" alt=\"Example food label with nutrition or health claims.\"></figure>" }
+      ] },
+      { "type": "button-group", "buttons": [
+        { "text": "Back", "link": "/terms-of-use", "variant": "secondary", "action": "navigate" },
+        { "text": "Next", "link": "/limitations", "variant": "primary", "action": "navigate" }
+      ] }
+    ] },
+    { "path": "/limitations", "title": "Limitations of Label Buster", "content": [
+      { "type": "html", "content": "<p>Foods with complex labelling requirements are excluded from Label Buster. The following questions will help you to work out if you can use Label Buster for your food.</p>" },
+      { "type": "questionaire", "questions": [
+        { "id": "q_is_drink_complex", "promptHtml": "<p><strong>Is your food:</strong></p><ul><li>an <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#alcoholic\" target=\"_blank\">alcoholic drink</a></li><li>a <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#caffeinated\" target=\"_blank\">formulated caffeinated drink</a>,</li><li>an <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#electrolyte\" target=\"_blank\">electrolyte drink</a></li><li>a <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#grains\" target=\"_blank\">drink made from cereals, nuts, and/or seeds</a></li><li>a drink base (solid or liquid) that is used to make any of the drinks above?</li></ul>", "type": "single", "options": [ { "label": "Yes", "value": "yes" }, { "label": "No", "value": "no" } ], "required": true }
+      ] },
+      { "type": "inpage-alert", "alertType": "warning", "heading": "Seek professional advice", "content": "<p>Thank you for your interest in Label Buster. Unfortunately, Label Buster does not provide labelling information for these drinks. We recommend you seek professional advice from a food labelling consultant to prepare your food label.</p>", "visibleWhen": [ { "id": "q_is_drink_complex", "value": "yes" } ] },
+      { "type": "questionaire", "questions": [
+        { "id": "q_special_purpose", "promptHtml": "<p><strong>Is your food a <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#special\" target=\"_blank\">special purpose food</a>?</strong></p><p>Special purpose foods include:</p><ul><li>Infant formula products</li><li>Foods for infants</li><li>Formulated meal replacements and formulated supplementary foods</li><li>Formulated supplementary sports foods</li><li>Food for special medical purposes</li></ul>", "type": "single", "options": [ { "label": "Yes", "value": "yes" }, { "label": "No", "value": "no" } ], "visibleWhen": [ { "id": "q_is_drink_complex", "value": "no" } ] }
+      ] },
+      { "type": "button-group", "buttons": [
+        { "text": "Back", "link": "/about-food-labels", "variant": "secondary", "action": "navigate", "requiresValidation": true },
+        { "text": "Next", "link": "/food-name", "variant": "primary", "action": "navigate", "requiresValidation": true }
+      ] }
+    ], "helpGuide": { "sections": [
+      { "id": "limitations-overview", "title": "Limitations overview", "content": "<p>Label Buster excludes complex products such as alcoholic drinks, formulated caffeinated drinks, electrolyte drinks, cereal/nut/seed-based drinks, and drink bases used to make these.</p><p>Use the questions on this page to determine if Label Buster applies to your product.</p>" },
+      { "id": "excluded-drinks", "title": "Excluded drinks", "content": "<ul><li><a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#alcoholic\" target=\"_blank\">Alcoholic drinks</a></li><li><a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#caffeinated\" target=\"_blank\">Formulated caffeinated drinks</a></li><li><a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#electrolyte\" target=\"_blank\">Electrolyte drinks</a></li><li><a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#grains\" target=\"_blank\">Cereal/nut/seed-based drinks</a></li></ul>" },
+      { "id": "special-purpose-foods", "title": "Special purpose foods", "content": "<p>Special purpose foods include infant formula products, foods for infants, formulated meal replacements, formulated supplementary foods, formulated supplementary sports foods, and food for special medical purposes.</p><p>See: <a href=\"https://www.qld.gov.au/health/staying-healthy/food-pantry/food-labelling/limitations#special\" target=\"_blank\">Special purpose foods guidance</a>.</p>" }
+    ] } },
+    { "path": "/food-name", "title": "Food name", "content": "Food name requirements." },
+    { "path": "/business-details", "title": "Business details", "content": "Business details information." },
+    { "path": "/date-marks", "title": "Date marks", "content": "Date marks information." },
+    { "path": "/storage-and-use", "title": "Storage and use", "content": "Storage and use information." },
+    { "path": "/ingredients", "title": "Ingredients", "content": "Ingredients information." },
+    { "path": "/statements", "title": "Statements", "content": "Statements information." },
+    { "path": "/your-label", "title": "Your Label", "content": "Your label information." },
+    { "path": "/example-page", "title": "Example Page", "content": "This is an example page." }
+  ]
+}

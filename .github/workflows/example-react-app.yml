@@ -23,7 +23,7 @@ jobs:
           corepack enable
           corepack prepare pnpm@9.15.0 --activate
           pnpm install
-          pnpm build:app --config example.json --app react
+          pnpm build:app --config food-pantry.json --app react
 
       - name: Stage build output + stable aliases
         run: |
