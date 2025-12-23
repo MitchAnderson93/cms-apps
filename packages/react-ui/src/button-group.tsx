@@ -8,11 +8,12 @@ interface ButtonGroupButton {
   action?: "navigate" | "submit" | "cancel";
   disabled?: boolean;
   requiresValidation?: boolean; // opt-in gating per button
+  validateWhen?: Array<{ id: string; value: any }>;
 }
 
 interface ButtonGroupProps {
   buttons: ButtonGroupButton[];
-  onValidate?: () => boolean;
+  onValidate?: (button?: ButtonGroupButton) => boolean;
   onNavigateSuccess?: (link: string) => void; // Called when navigation happens after validation
 }
 
@@ -22,7 +23,7 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
   const handleClick = (button: ButtonGroupButton) => {
     if (button.action === "navigate" && button.link) {
       // Only gate when this button opts-in to validation
-      if (button.requiresValidation && onValidate && !onValidate()) {
+      if (button.requiresValidation && onValidate && !onValidate(button)) {
         return;
       }
       // Call success callback before navigation
@@ -34,7 +35,7 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
       navigate(button.link);
     }
   };
-  
+
   const isButtonDisabled = (button: ButtonGroupButton) => {
     // If button has explicit disabled flag, use it
     if (button.disabled !== undefined) {
@@ -42,7 +43,7 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
     }
     // If validation is required for this button, reflect disabled state
     if (button.requiresValidation && onValidate && button.action === "navigate" && button.link) {
-      return !onValidate();
+      return !onValidate(button);
     }
     return false;
   };

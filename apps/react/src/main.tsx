@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
-import { Sidenav, InpageAlert, Button, Accordion, Checkbox, ButtonGroup, Image, Questionaire, HelpGuide } from "@repo/ui";
+import { Sidenav, InpageAlert, Button, Accordion, Checkbox, ButtonGroup, Image, Questionaire, HelpGuide, Callout, Select } from "@repo/react-ui";
 import { createPortal } from "react-dom";
 
 // FINDME: Hotfix to exclude global CMS style that adds unwanted margin to list items
@@ -76,14 +76,49 @@ function PageContent({
     : [{ type: "text", content: currentPage.content }];
 
   // Helpers for conditional visibility and questionnaire validation
-  const satisfiesConditions = (conds?: Array<{ id: string; value: any }>): boolean => {
+  const satisfiesConditions = (conds?: Array<{ id: string; value?: any; answered?: boolean; required?: boolean; minLength?: number; maxLength?: number; pattern?: string }>): boolean => {
     if (!conds || conds.length === 0) return true;
     return conds.every((c) => {
       const v = validationState[c.id];
-      if (Array.isArray(c.value)) {
-        return Array.isArray(v) && c.value.every((cv) => v.includes(cv));
+      
+      // Handle validation rules for text inputs
+      if (c.answered !== undefined) {
+        // Check if question is answered
+        return v !== undefined && v !== null && v !== "";
       }
-      return v === c.value;
+      
+      if (c.required !== undefined && c.required) {
+        // Check if required field has a value
+        if (v === undefined || v === null || v === "") return false;
+      }
+      
+      if (c.minLength !== undefined) {
+        // Check minimum length for text inputs
+        if (typeof v !== "string") return false;
+        if (v.length < c.minLength) return false;
+      }
+      
+      if (c.maxLength !== undefined) {
+        // Check maximum length for text inputs
+        if (typeof v === "string" && v.length > c.maxLength) return false;
+      }
+      
+      if (c.pattern !== undefined) {
+        // Check if value matches the pattern
+        if (typeof v !== "string") return false;
+        const regex = new RegExp("^" + c.pattern + "$");
+        if (!regex.test(v)) return false;
+      }
+      
+      // Handle value matching (for visibility conditions)
+      if (c.value !== undefined) {
+        if (Array.isArray(c.value)) {
+          return Array.isArray(v) && c.value.every((cv) => v.includes(cv));
+        }
+        return v === c.value;
+      }
+      
+      return true;
     });
   };
 
@@ -169,12 +204,32 @@ function PageContent({
                 required={item.required}
               />
             );
+          case "select":
+            return (
+              <Select
+                key={index}
+                id={item.id || `select-${index}`}
+                label={item.label}
+                options={item.options || []}
+                value={validationState[item.id] || ""}
+                onChange={(value) => setValidationState(prev => ({ ...prev, [item.id]: value }))}
+                required={item.required}
+                hint={item.hint}
+                errorMessage={item.errorMessage}
+                successMessage={item.successMessage}
+                optional={item.optional}
+              />
+            );
           case "button-group":
             return (
               <ButtonGroup
                 key={index}
                 buttons={item.buttons}
-                onValidate={() => {
+                onValidate={(button) => {
+                  // If button has validateWhen, use it for validation
+                  if (button && Array.isArray(button.validateWhen)) {
+                    return satisfiesConditions(button.validateWhen);
+                  }
                   if (item.validateCheckbox) {
                     return validationState[item.validateCheckbox] === true;
                   }
@@ -198,10 +253,13 @@ function PageContent({
                   setValidationState(prev => {
                     const next = { ...prev };
                     if (value === undefined) {
-                      // Clear the answer key entirely
-                      delete (next as any)[id];
+                      delete next[id];
                     } else {
-                      (next as any)[id] = value;
+                      next[id] = value;
+                    }
+                    // Special logic: if q_is_drink_complex changes, always clear q_special_purpose
+                    if (id === "q_is_drink_complex") {
+                      delete next["q_special_purpose"];
                     }
                     return next;
                   });
@@ -210,6 +268,15 @@ function PageContent({
             );
           case "html":
             return <div key={index} dangerouslySetInnerHTML={{ __html: item.content }} />;
+          case "callout":
+            return (
+              <Callout
+                key={index}
+                title={item.title}
+                description={item.description}
+                className={item.className}
+              />
+            );
           case "text":
           default:
             return <p key={index}>{item.content}</p>;
@@ -336,17 +403,28 @@ function AppWithRouter() {
     const cfg = __APP_CONFIG__ || {};
     const ps = cfg.pages || [];
     const currentPage = ps.find((p: any) => p.path === location.pathname);
+    
+    // Support both legacy flat sections and new grouped format
     const pageSections = (currentPage?.helpGuide?.sections) || [];
+    const pageSectionGroups = (currentPage?.helpGuide?.sectionGroups) || null;
+    
     // Allow fallback to top-level sections, but only render on Limitations
     const globalSections = (cfg.helpGuide?.sections) || [];
-    const sectionsToUse = (pageSections && pageSections.length > 0)
+    const globalSectionGroups = (cfg.helpGuide?.sectionGroups) || null;
+    
+    // Determine what to use: page-specific first, then global fallback for specific pages
+    const useSectionGroups = pageSectionGroups || (currentPage?.path === '/limitations' ? globalSectionGroups : null);
+    const useSections = (!useSectionGroups && pageSections && pageSections.length > 0)
       ? pageSections
-      : (currentPage?.path === '/limitations' ? globalSections : []);
-    if (!sectionsToUse || sectionsToUse.length === 0) return null;
+      : (!useSectionGroups && currentPage?.path === '/limitations' ? globalSections : []);
+    
+    if (!useSectionGroups && (!useSections || useSections.length === 0)) return null;
+    
     return createPortal(
       <HelpGuide
         open={open}
-        sections={sectionsToUse}
+        sections={useSectionGroups ? undefined : useSections}
+        sectionGroups={useSectionGroups || undefined}
         activeSectionId={activeId}
         onClose={() => setHelpOpen(false)}
         onOpen={() => setHelpOpen(true)}

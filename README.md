@@ -11,7 +11,8 @@ Contains deployable applications:
 ### Packages (`packages/`)
 Shared packages used across applications:
 - **@repo/app-config** - JSON configuration files that define app context (name, version, content, theme, etc.)
-- **@repo/ui** - Shared React component library (replace with web components dependency)
+- **@repo/react-ui** - Shared React component library (replace with web components dependency)
+- **@repo/vue-ui** - Shared React component library (replace with web components dependency)
 - **@repo/eslint-config** - ESLint configurations for code linting
 - **@repo/typescript-config** - Shared TypeScript configurations
 
