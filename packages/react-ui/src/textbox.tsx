@@ -1,10 +1,20 @@
+
 import React, { useState } from "react";
+
+type HintLink = { type: "link"; text: string; href: string; target?: string };
+type HintContent = string | HintLink;
+
+interface LabelList {
+  heading: string;
+  list: (string | HintLink)[];
+  intro?: string;
+}
 
 interface TextboxProps {
   id: string;
-  label: string | string[];
+  label: string | string[] | HintContent[] | LabelList;
   optional?: boolean;
-  hint?: string | string[];
+  hint?: string | string[] | HintContent[];
   successMessage?: string;
   errorMessage?: string;
   value?: string;
@@ -82,20 +92,111 @@ export function Textbox(props: TextboxProps) {
   const charCount = inputValue.length;
   const isNearLimit = maxChars && charCount >= maxChars * 0.9;
 
-  // Helper to render label/hint as text or list
-  const renderTextOrList = (content: string | string[] | undefined, className?: string, id?: string) => {
+  // Helper to render label/hint as text, list, or inline with links
+  const renderTextOrList = (
+    content: string | string[] | HintContent[] | undefined,
+    className?: string,
+    id?: string
+  ): React.ReactNode => {
     if (!content) return null;
     if (Array.isArray(content)) {
-      return <ul className={className} id={id}>{content.map((item, i) => <li key={i}>{item}</li>)}</ul>;
+      // If all items are strings, treat as list (legacy)
+      if (content.every((item) => typeof item === "string")) {
+        return (
+          <ul className={className} id={id}>
+            {(content as string[]).map((item, i) => <li key={i}>{item}</li>)}
+          </ul>
+        );
+      }
+      // Otherwise, treat as inline fragments (text + links + nested lists)
+      return (
+        <span className={className} id={id}>
+          {(content as (string | HintLink | any[])[]).map((item, i) => {
+            if (typeof item === "string") return <React.Fragment key={i}>{item}</React.Fragment>;
+            if (Array.isArray(item)) {
+              // Nested list
+              return (
+                <ul key={i}>
+                  {item.map((li, j) => <li key={j}>{typeof li === "string" ? li : renderTextOrList(li)}</li>)}
+                </ul>
+              );
+            }
+            if (item && typeof item === "object" && item.type === "link") {
+              return (
+                <a
+                  key={i}
+                  href={item.href}
+                  target={item.target || "_blank"}
+                  rel="noopener noreferrer"
+                  className="qld-hint-link"
+                >
+                  {item.text}
+                </a>
+              );
+            }
+            return null;
+          })}
+        </span>
+      );
     }
-    return <span className={className} id={id}>{content}</span>;
+    if (typeof content === "object" && (content as HintLink).type === "link") {
+      const link = content as HintLink;
+      return (
+        <a
+          href={link.href}
+          target={link.target || "_blank"}
+          rel="noopener noreferrer"
+          className="qld-hint-link"
+        >
+          {link.text}
+        </a>
+      );
+    }
+    // fallback for string
+    return <span className={className} id={id}>{content as string}</span>;
   };
   return (
     <div className="qgds-textbox-wrapper">
-      <label className={`qld-text-input-label${required ? " field-required" : ""}`} htmlFor={id}>
-        {renderTextOrList(label)}
+      <div className={`qld-text-input-label${required ? " field-required" : ""}`}>
+        {(() => {
+          if (typeof label === "object" && label && "heading" in label && "list" in label) {
+            // Render advanced label (LabelList)
+            return <>
+              {required ? " " : ""}{label.heading}
+              {label.intro && <span className="qld-hint-text">{label.intro}</span>}
+              {label.list && label.list.length > 0 && (
+                <ul className="pl-20">
+                  {label.list.map((item, i) =>
+                    typeof item === "string" ? (
+                      <li key={i}>{item}</li>
+                    ) : (
+                      <li key={i}>
+                        <a
+                          href={item.href}
+                          target={item.target || "_blank"}
+                          rel="noopener noreferrer"
+                          className="qld-hint-link"
+                        >
+                          {item.text}
+                        </a>
+                      </li>
+                    )
+                  )}
+                </ul>
+              )}
+            </>;
+          }
+          // For string or array label, add space if required
+          if (typeof label === "string") {
+            return (required ? " " : "") + label;
+          }
+          if (Array.isArray(label)) {
+            return (required ? " " : "") + label.join(" ");
+          }
+          return renderTextOrList(label);
+        })()}
         {optional && <span className="label-text-optional">(optional)</span>}
-      </label>
+      </div>
       {hint && renderTextOrList(hint, "qld-hint-text", `${id}-hint`)}
       <input
         id={id}

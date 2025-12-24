@@ -15,7 +15,7 @@ interface VisibleCondition {
 
 type HintLink = { type: "link"; text: string; href: string; target?: string };
 type HintContent = string | HintLink;
-type LabelList = { heading: string; list: (string | HintLink)[] };
+type LabelList = { heading: string; list: (string | HintLink)[]; intro?: string };
 
 interface QuestionConfig {
   id: string;
@@ -41,13 +41,15 @@ function isQuestionVisible(q: QuestionConfig, answers: Record<string, any>): boo
   if (!q.visibleWhen || q.visibleWhen.length === 0) return true;
   return q.visibleWhen.every(cond => {
     const answer = answers[cond.id];
-    
     // If checking for "answered" property
     if (cond.answered !== undefined) {
       const hasAnswer = answer !== undefined && answer !== null && answer !== '';
       return cond.answered === hasAnswer;
     }
-    
+    // Support array of allowed values
+    if (Array.isArray(cond.value)) {
+      return cond.value.includes(answer);
+    }
     // Otherwise check for specific value match
     return answer === cond.value;
   });
@@ -59,6 +61,19 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
       {questions.map((q, idx) => {
         if (!isQuestionVisible(q, answers)) {
           return null;
+        }
+        // Render HTML type question as a block of HTML (using label and/or hint)
+        if (q.type === "html") {
+          return (
+            <div key={q.id} className="question mb-4">
+              {q.label && (
+                <div className="qld-text-input-label" dangerouslySetInnerHTML={{ __html: typeof q.label === "string" ? q.label : (q.label.heading || "") }} />
+              )}
+              {q.hint && (
+                <div className="qld-hint-text" dangerouslySetInnerHTML={{ __html: q.hint }} />
+              )}
+            </div>
+          );
         }
         const value = answers[q.id];
         const type: "single" | "multi" | "text" | "select" = q.type || (q.options ? (q.options.length > 0 ? "single" : "text") : "text");
@@ -92,7 +107,8 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
             {type === "text" ? (
               <Textbox
                 id={q.id}
-                label={typeof q.label === "string" || Array.isArray(q.label) ? q.label : (q.label && typeof (q.label as any).heading === "string" ? (q.label as any).heading : "")}
+                label={q.label}
+                hint={q.hint}
                 required={q.required}
                 maxChars={q.maxChars}
                 minChars={q.minChars}
@@ -103,18 +119,85 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
               />
             ) : (
               <>
-                {renderTextOrList(q.label, "mb-2", q.id)}
-                {type === "single" ? (
-                  <div className="btn-group d-flex" role="group" aria-label={q.id}>
+                {renderTextOrList(q.label, "mb-2", q.id, true, q.required)}
+                {/* Render checkboxes for multi, radios for single with >2 options, else use button group for binary single */}
+                {type === "multi" ? (
+                  <div>
+                    {q.options?.map((opt) => {
+                      const selected: string[] = Array.isArray(value) ? value : [];
+                      const checked = selected.includes(opt.value);
+                      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        const next = new Set(selected);
+                        if (e.target.checked) {
+                          next.add(opt.value);
+                        } else {
+                          next.delete(opt.value);
+                        }
+                        onAnswerChange(q.id, Array.from(next));
+                        for (let i = idx + 1; i < questions.length; i++) {
+                          const nextQ = questions[i];
+                          if (nextQ && nextQ.id) {
+                            onAnswerChange(nextQ.id, undefined);
+                          }
+                        }
+                      };
+                      return (
+                        <div className="form-check" key={opt.value}>
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`${q.id}-${opt.value}`}
+                            checked={checked}
+                            onChange={handleChange}
+                          />
+                          <label className="form-check-label" htmlFor={`${q.id}-${opt.value}`}>
+                            {opt.label}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : type === "single" && q.options && q.options.length > 2 ? (
+                  <div>
+                    {q.options?.map((opt) => {
+                      const checked = value === opt.value;
+                      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        if (e.target.checked) {
+                          onAnswerChange(q.id, opt.value);
+                          for (let i = idx + 1; i < questions.length; i++) {
+                            const nextQ = questions[i];
+                            if (nextQ && nextQ.id) {
+                              onAnswerChange(nextQ.id, undefined);
+                            }
+                          }
+                        }
+                      };
+                      return (
+                        <div className="form-check" key={opt.value}>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name={q.id}
+                            id={`${q.id}-${opt.value}`}
+                            checked={checked}
+                            onChange={handleChange}
+                          />
+                          <label className="form-check-label" htmlFor={`${q.id}-${opt.value}`}>
+                            {opt.label}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="d-flex gap-2" role="group" aria-label={q.id}>
                     {q.options?.map((opt) => (
                       <button
                         key={opt.value}
                         type="button"
                         className={`btn btn-${value === opt.value ? "primary" : "light"} me-2 flex-grow-1`}
                         onClick={() => {
-                          // Set current answer
                           onAnswerChange(q.id, opt.value);
-                          // Reset subsequent questions in this questionnaire
                           for (let i = idx + 1; i < questions.length; i++) {
                             const nextQ = questions[i];
                             if (nextQ && nextQ.id) {
@@ -127,43 +210,6 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
                       </button>
                     ))}
                   </div>
-                ) : (
-                  <div>
-                    {q.options?.map((opt) => {
-                      const selected: string[] = Array.isArray(value) ? value : [];
-                      const checked = selected.includes(opt.value);
-                      return (
-                        <div className="form-check" key={opt.value}>
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`${q.id}-${opt.value}`}
-                            checked={checked}
-                            onChange={(e) => {
-                              const next = new Set(selected);
-                              if (e.target.checked) {
-                                next.add(opt.value);
-                              } else {
-                                next.delete(opt.value);
-                              }
-                              // Set current multi-select answer
-                              onAnswerChange(q.id, Array.from(next));
-                              // Reset subsequent questions in this questionnaire
-                              for (let i = idx + 1; i < questions.length; i++) {
-                                const nextQ = questions[i];
-                                if (nextQ && nextQ.id) {
-                                  onAnswerChange(nextQ.id, undefined);
-                                }
-                              }
-                            }}
-                          />
-                          <label className="form-check-label" htmlFor={`${q.id}-${opt.value}`}>
-                            {opt.label}
-                          </label>
-                        </div>
-                      );
-                    })}
-                  </div>
                 )}
               </>
             )}
@@ -175,10 +221,11 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
 }
 
 const renderTextOrList = (
-  content: string | string[] | HintContent[] | { heading: string; list: (string | HintLink)[] } | undefined,
+  content: string | string[] | HintContent[] | { heading: string; list: (string | HintLink)[]; intro?: string } | undefined,
   className?: string,
   id?: string,
-  showExampleLabel: boolean = true
+  showExampleLabel: boolean = true,
+  required?: boolean
 ) => {
   if (!content) return null;
   // Handle new label object with heading and list
@@ -187,9 +234,23 @@ const renderTextOrList = (
     const heading = Array.isArray(content.heading) ? content.heading : [content.heading];
     return (
       <div className={className} id={id}>
-        <span style={{ fontWeight: 600 }}>
-          {heading.map((h, i) =>
-            typeof h === "string"
+        <div className={required ? "qld-text-input-label field-required" : "qld-text-input-label"}>
+          {heading.map((h, i) => {
+            if (i === 0 && required) {
+              if (typeof h === "string") {
+                return " " + h;
+              } else {
+                return <span key={i}> <a
+                  href={h.href}
+                  target={h.target || "_blank"}
+                  rel="noopener noreferrer"
+                  className="qld-hint-link"
+                >
+                  {h.text}
+                </a></span>;
+              }
+            }
+            return typeof h === "string"
               ? h
               : <a
                   key={i}
@@ -199,32 +260,33 @@ const renderTextOrList = (
                   className="qld-hint-link"
                 >
                   {h.text}
-                </a>
-          )}
-        </span>
+                </a>;
+          })}
+        </div>
         {content.intro && (
-          <div style={{ marginTop: 4, marginBottom: 4 }}>{content.intro}</div>
+          <span className="qld-hint-text">{content.intro}</span>
         )}
-        <ul style={{ marginTop: 0, marginBottom: 0, paddingLeft: 20 }}>
-          {content.list.map((item, i) =>
-            typeof item === "string" ? (
-              <li key={i}>{item}</li>
-            ) : (
-              <li key={i}>
-                <a
-                  href={item.href}
-                  target={item.target || "_blank"}
-                  rel="noopener noreferrer"
-                  className="qld-hint-link"
-                >
-                  {item.text}
-                </a>
-              </li>
-            )
-          )}
-        </ul>
+        <span className="qld-hint-text">
+          <ul className="pl-20">
+            {content.list.map((item, i) =>
+              typeof item === "string" ? (
+                <li key={i}>{item}</li>
+              ) : (
+                <li key={i}>
+                  <a
+                    href={item.href}
+                    target={item.target || "_blank"}
+                    rel="noopener noreferrer"
+                    className="qld-hint-link"
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              )
+            )}
+          </ul>
+        </span>
       </div>
     );
   }
-  // ...existing code for string, string[], HintContent[]
 };

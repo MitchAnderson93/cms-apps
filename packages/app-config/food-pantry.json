@@ -343,6 +343,7 @@
                 ]
               },
               "type": "single",
+              "maxSelections": 1,
               "options": [
                 {
                   "label": "Yes",
@@ -387,6 +388,7 @@
                   "value": "no"
                 }
               ],
+              "required": true,
               "visibleWhen": [
                 {
                   "id": "q_is_drink_complex",
@@ -1043,15 +1045,42 @@
               "label": "State",
               "type": "select",
               "options": [
-                { "label": "Please select", "value": "" },
-                { "label": "Australian Capital Territory", "value": "ACT" },
-                { "label": "New South Wales", "value": "NSW" },
-                { "label": "Northern Territory", "value": "NT" },
-                { "label": "Queensland", "value": "QLD" },
-                { "label": "South Australia", "value": "SA" },
-                { "label": "Tasmania", "value": "TAS" },
-                { "label": "Victoria", "value": "VIC" },
-                { "label": "Western Australia", "value": "WA" }
+                {
+                  "label": "Please select",
+                  "value": ""
+                },
+                {
+                  "label": "Australian Capital Territory",
+                  "value": "ACT"
+                },
+                {
+                  "label": "New South Wales",
+                  "value": "NSW"
+                },
+                {
+                  "label": "Northern Territory",
+                  "value": "NT"
+                },
+                {
+                  "label": "Queensland",
+                  "value": "QLD"
+                },
+                {
+                  "label": "South Australia",
+                  "value": "SA"
+                },
+                {
+                  "label": "Tasmania",
+                  "value": "TAS"
+                },
+                {
+                  "label": "Victoria",
+                  "value": "VIC"
+                },
+                {
+                  "label": "Western Australia",
+                  "value": "WA"
+                }
               ],
               "required": true
             },
@@ -1063,7 +1092,7 @@
               "maxChars": 4,
               "pattern": "[0-9]*",
               "hint": "Enter a 4-digit postcode (numbers only).",
-              "errorMessage": "Postcode must be exactly 4 digits."
+              "errorMessage": " Postcode must be exactly 4 digits."
             }
           ]
         },
@@ -1147,32 +1176,524 @@
     {
       "path": "/date-marks",
       "title": "Date marks",
-      "content": "Date marks information."
+      "content": [
+        {
+          "type": "callout",
+          "description": "<p>Foods that should be eaten before a certain date for health and safety reasons must be labelled with a <a href=\"helpGuide#use-by-date\" class=\"help-guide-link\">use-by date</a>. Other food that should be eaten in 2 years must have a <a href=\"helpGuide#best-before-date\" class=\"help-guide-link\">best-before date</a>.</p>",
+          "className": "mb-4"
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_shelf_life_over_2_years",
+              "label": {
+                "heading": "Does your food have a shelf life of more than 2 years?",
+                "intro": "For example:",
+                "list": [
+                  "Apricot jam in a bottle that has been heat treated",
+                  "Canned peaches"
+                ]
+              },
+              "type": "single",
+              "required": true,
+              "options": [
+                { "label": "Yes", "value": "yes" },
+                { "label": "No", "value": "no" }
+              ]
+            },
+            {
+              "id": "q_shelf_life_less_7_days",
+              "label": {
+                "heading": "Is your food bread, with a shelf life of less than 7 days?",
+                "list": []
+              },
+              "type": "single",
+              "required": true,
+              "options": [
+                { "label": "Yes", "value": "yes" },
+                { "label": "No", "value": "no" }
+              ],
+              "visibleWhen": [
+                {
+                  "id": "q_shelf_life_over_2_years",
+                  "value": "no"
+                }
+              ]
+            },
+            {
+              "id": "q_eaten_before_certain_date",
+              "label": {
+                "heading": "Does your food name, or label, highlight an ingredient?",
+                "intro": "For example:",
+                "list": [
+                  "Food that may contain bacteria that will grow at fridge temperatures (e.g.: Listeria)",
+                  "Perishable ready-to-eat food that will spoil (become mouldy, rancid or soured) before it becomes unsafe (e.g.: deli salads, prepared salads)."
+                ]
+              },
+              "type": "single",
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ],
+              "required": true,
+              "visibleWhen": [
+                {
+                  "id": "q_shelf_life_less_7_days",
+                  "value": "no"
+                }
+              ]
+            },
+            {
+              "id": "q_date_mark_type",
+              "label": {
+                  "heading": "What type of date mark do you need for your food?",
+                  "list": []
+              },
+              "type": "single",
+              "options": [
+                { "label": "Use-by date", "value": "use-by" },
+                { "label": "Best-before date", "value": "best-before" },
+                { "label": "Baked-on date", "value": "baked-on" },
+                { "label": "Baked-for date", "value": "baked-for" },
+                { "label": "Do not need a date mark", "value": "none" }
+              ],
+              "required": true
+            },
+            {
+              "id": "q_date_for_food",
+              "label": {
+                "heading": "What is the date for the food?",
+                "list": []
+              },
+              "hint": [
+                "The date will usually be in the ",
+                { "type": "link", "text": "date format", "href": "helpGuide#date-format" },
+                " of:",
+                [
+                  "dd/mm/yyyy (e.g.: 15/3/2020) for food with a shelf life of 3 months or less, or",
+                  "mmm/yyyy (e.g.: Apr 2021) for food with a shelf life of more than 3 months."
+                ],
+                "Leave this question blank if the food is not packaged or does not need a date mark."
+              ],
+              "type": "text",
+              "required": true,
+              "visibleWhen": [
+                  {
+                    "id": "q_date_mark_type",
+                    "value": ["use-by", "best-before", "baked-on", "baked-for"]
+                  }
+              ]
+            },
+            {
+              "id": "q_lot_identifification",
+              "label": {
+                "heading": "Lot identification",
+                "list": []
+              },
+              "hint": [
+                { "type": "link", "text": "Lot identification", "href": "helpGuide#lot-identification" },
+                " helps identify food. You must include lot identification if you are not using a date mark. If your date mark is your lot identification, leave blank; otherwise enter a lot identification below."
+              ],
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "No date mark is required",
+          "content": "<p>No date marking information is required for a food with a shelf life of more than 2 years.</p><p>If date marking is not required, a food business must add a <a href=\"helpGuide#lot-identification\" class=\"help-guide-link\">lot identification</a> so that the food can be identified.</p>",
+          "visibleWhen": [
+            {
+              "id": "q_shelf_life_over_2_years",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Best-before, baked-on or baked-for date",
+          "content": "<p>Bread with a shelf life of less than 7 days can be labelled using either a:</p><ul><li><a href=\"helpGuide#best-before-date\" class=\"help-guide-link\">Best-before date</a></li><li><a href=\"helpGuide#baked-for-on-date\" class=\"help-guide-link\">Baked-for date</a></li><li><a href=\"helpGuide#baked-for-on-date\" class=\"help-guide-link\">Baked-on date</a></li></ul>",
+          "visibleWhen": [
+            {
+              "id": "q_shelf_life_less_7_days",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Use-by date",
+          "content": "These foods must be labelled with a <a href=\"helpGuide#use-by-date\" class=\"help-guide-link\">use-by date</a> because they may become unsafe to eat after the use-by date has passed. A food may look, smell and taste ok but be unsafe to eat.",
+          "visibleWhen": [
+            {
+              "id": "q_eaten_before_certain_date",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Best-before date",
+          "content": "A <a href=\"helpGuide#best-before-date\" class=\"help-guide-link\">best-before date</a> is required for all foods with a shelf life of 2 years or less that do not need a <a href=\"helpGuide#use-by-date\" class=\"help-guide-link\">use-by date.</a> The best-before date is the date up to which the food remains with good appearance, smell and taste, and keeps any qualities for which a claim has been made.",
+          "visibleWhen": [
+            {
+              "id": "q_eaten_before_certain_date",
+              "value": "no"
+            }
+          ]
+        },
+        {
+          "type": "button-group",
+          "buttons": [
+            {
+              "text": "Back",
+              "link": "/food-name",
+              "variant": "secondary",
+              "action": "navigate",
+              "requiresValidation": false
+            },
+            {
+              "text": "Next",
+              "link": "/storage-and-use",
+              "variant": "primary",
+              "action": "navigate",
+              "requiresValidation": true,
+              "validateWhen": [
+                {
+                  "id": "q_shelf_life_over_2_years",
+                  "required": true
+                },
+                {
+                  "id": "q_shelf_life_less_7_days",
+                  "required": true
+                },
+                {
+                  "id": "q_eaten_before_certain_date",
+                  "required": true
+                },
+                {
+                  "id": "q_date_mark_type",
+                  "required": true
+                },
+                {
+                  "id": "q_date_for_food",
+                  "required": true
+                },
+                {
+                  "id": "q_lot_identifification",
+                  "required": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "helpGuide": {
+        "sectionGroups": [
+          {
+            "groupTitle": "General requirements",
+            "sections": [
+              {
+                "id": "what-date-mark",
+                "title": "What is a date mark?",
+                "content": "<p>A date mark is a guide to how long a food will last. All packaged food with a shelf life of two years or less must show a date mark, except for individual portions of ice cream or ice confection.</p><p>Shelf life refers to the length of time a food remains:</p><ul><li>safe to eat</li><li>looks, smells and tastes ok, and</li><li>retains any specific qualities for which claims have been made.</li></ul><p>A <a href=\"helpGuide#use-by-date\" class=\"help-guide-link\">use-by date</a> is required when a food becomes unsafe to eat. Food cannot be sold and should not be eaten after its <a href=\"helpGuide#use-by-date\" class=\"help-guide-link\">use-by date</a>. A food can be eaten past its <a href=\"helpGuide#best-before-date\" class=\"help-guide-link\">best-before date</a>, but may not look, smell or taste the same as when it was fresh. Bread with a shelf life of less than 7 days, can be date marked with a <a href=\"helpGuide#baked-for-on-date\" class=\"help-guide-link\">baked-on or baked-for date</a>.</p><p>It may be necessary to seek expert advice from a food testing laboratory:</p><ul><li>to determine your food’s shelf life</li><li>to determine what type of date mark is required for your food.</li></ul><p>The Food Standards Code gives rules for the <a href=\"helpGuide#date-format\" class=\"help-guide-link\">format of the date mark</a> (how it appears on label). The day and month are required for a food with a shelf life of 3 months or less, whereas the month and year are required for a food with a longer shelf life.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              },
+              {
+                "id": "baked-for-on-date",
+                "title": "Baked-on and baked-for dates",
+                "content": "<p>The label on a package of bread with a shelf life of less than 7 days may be date marked with a baked-on date or a baked-for date instead of a <a href=\"helpGuide#best-before-date\" class=\"help-guide-link\">best-before date</a>.</p><p>The baked-on date means the date on which the bread was baked.</p><p>The baked-for date means:</p><ul><li>If the time at which the bread was baked is before midday – the baked-on date</li><li>If the time at which the bread was baked is after midday – the day after the baked-on date. Bread that is baked after midday on one day may have a baked-for date of the following day. The baked-for date must not be later than 12 hours after the time the bread was baked.</li></ul><p>The words ‘Baked On’ or ‘Baked For’, or the shortened terms, ‘Bkd On’ or ‘Bkd For’, must be included on the label followed by the date, for example, Bkd On 15 Apr.</p><h4>Further reading</h4><p>Queensland Health publication</p><ul><li><a href=\"https://www.publications.qld.gov.au/dataset/food-labelling/resource/50bf4dcb-48fe-4321-8866-dfbb36a56259\" target=\"_blank\" rel=\"noopener\">Bread and Bakery Products</a></li></ul><p><i>Australia New Zealand Food Standards Code</i></p><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              },
+              {
+                "id": "best-before-date",
+                "title": "Best-before dates",
+                "content": "<p>A best-before date is the last date on which you can expect a food to look, smell and taste fresh, and to keep any property for which a claim has been made. This is on the condition that the food has been stored according to any storage conditions on the label and the package is unopened.</p><p>A food that has passed its best-before date will still be safe to eat.</p><p>The words ‘Best Before’ must be included on the label followed by the date, or a direction provided about where the date is located. For example:</p><ul><li>Best Before 23 Dec 2021</li><li>Best Before – see base of can</li></ul><p>Foods may be sold after the best-before date if the food has not spoiled and complies with any other applicable legislation.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              },
+              {
+                "id": "date-format",
+                "title": "Date mark formats",
+                "content": "<p>The day, month and year must be written so that it is clear which number refers to the day, the month or the year.</p><p>The month can be expressed in either:</p><ul><li>numerical form, e.g. 01 for January; or</li><li>in letters, which can be upper case, e.g. JAN or JANUARY, or lower case, e.g. Jan or January.</li></ul><p>The year can be expressed in numerical form using either:</p><ul><li>2 digits, e.g. 21; or</li><li>4 digits, e.g. 2021.</li></ul><p>The date format depends on the shelf life of the food. The day and month (e.g. 15/03/2020) are required for a food with a shelf life of 3 months or less. The month and year (e.g.: Apr 2021) are required for a food with a longer shelf life.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              },
+              {
+                "id": "lot-identification",
+                "title": "Lot identification",
+                "content": "<p>Lot identification means a number or other information that identifies the premises where the food was prepared or packed, and the batch the food is part of. This may be useful when several batches of the same food are prepared, manufactured or packed on the same day. There is no set format for lot identification.</p><p>It is not always necessary to include a lot identification on a label if a date mark, business name and address can identify the food. If date marking is not required, lot identification must be added so that the food can be identified.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00389\" target=\"_blank\" rel=\"noopener\">Standard 1.2.2</a> Information requirements – food identification</li></ul>"
+              },
+              {
+                "id": "use-by-date",
+                "title": "Use-by dates",
+                "content": "<p>The use-by date is the date after which the food should not be eaten because it is no longer safe, provided it has been stored according to any stated storage conditions on the label and the package is unopened.</p><p>For example, milk is usually labelled with a use-by date because it may become unsafe before it becomes rancid, bitter, or separates.</p><p>You will need to determine the shelf life of your food to work out how long it can be safely stored. It is recommended you seek professional advice from a food testing laboratory.</p><p>The words ‘Use By’ must be included on the label followed by the date. For example, Use By 23 Dec 2021.</p><p>Food cannot be sold and should not be eaten after the use-by date.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              }
+            ]
+          },
+          {
+            "groupTitle": "Food with extra requirements",
+            "sections": [
+              {
+                "id": "small-package",
+                "title": "Food in small packages",
+                "content": "<p>If the food is sold in a small package where the package has a surface area of less than 100 cm<sup>2</sup> only a use-by date needs to be included. For example: A small bar of chocolate.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              },
+              {
+                "id": "ice-confection",
+                "title": "Ice cream or ice confection",
+                "content": "<p>If the food is a single serve of ice cream or ice confection no date marking information is required.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00401\" target=\"_blank\" rel=\"noopener\">Standard 1.2.5</a> Information requirements – date marking of food for sale</li></ul>"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "path": "/storage-and-use",
       "title": "Storage and use",
-      "content": "Storage and use information."
+        "content": "Storage and use information.",
+        "helpGuide": {
+          "sectionGroups": [
+            {
+              "groupTitle": "General requirements",
+              "sections": [
+                {
+                  "id": "directions-for-use",
+                  "title": "Directions for use",
+                  "content": "<p>Directions for use are instructions for how to prepare the food so that it is ready to eat. This includes directions required for health or safety reasons.</p><p>For example: frozen chicken tenders may have the directions for use as ‘This is a raw product. Must be cooked prior to eating. Cook from frozen. Please ensure chicken is fully cooked before eating’.</p><h4>Further reading</h4><ul><li><a href=\"http://www.comlaw.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li></ul>"
+                },
+                {
+                  "id": "storage-conditions",
+                  "title": "Storage conditions",
+                  "content": "<p>Storage conditions are instructions about how to store food so that the food will keep until the best-before or use-by date.</p><p>For example, storage conditions for milk may be ‘store below 5°C’.</p><h4>Further reading</h4><ul><li><a href=\"http://www.comlaw.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li></ul>"
+                }
+              ]
+            },
+            {
+              "groupTitle": "Food with extra requirements",
+              "sections": [
+                {
+                  "id": "bamboo-shoot",
+                  "title": "Bamboo shoots",
+                  "content": "<p><b>If the food is raw bamboo shoots:</b><br>The label must include directions for use indicating that bamboo shoots should be fully cooked before being eaten.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li></ul>"
+                },
+                {
+                  "id": "cassava-food",
+                  "title": "Cassava",
+                  "content": "<p><b>If the food is raw sweet cassava:</b><br>The label must include directions for use indicating that sweet cassava should be peeled and fully cooked before being consumed.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li></ul>"
+                },
+                {
+                  "id": "fish-seafood",
+                  "title": "Fish, crustacea and seafood",
+                  "content": "<p><b>If the food is raw fish which has been moulded or combined to look like a cut or fillet of fish:</b><br>The label must say that the food is either formed or joined and give cooking instructions to make it safe to eat.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00429\" target=\"_blank\" rel=\"noopener\">Standard 2.2.3</a> Fish and fish products. <ul><li>See section 2.2.3—3 Labelling of formed or joined fish</li></ul></li></ul>"
+                },
+                {
+                  "id": "meat-food",
+                  "title": "Meat and meat products",
+                  "content": "<p><b>If the food is raw meat which has been moulded or combined to look like a cut of meat:</b><br>The label must say that the food is either formed or joined and give cooking instructions to make it safe to eat.</p><h4>Further reading</h4><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00393\" target=\"_blank\" rel=\"noopener\">Standard 1.2.6</a> Information requirements – directions for use and storage</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00427\" target=\"_blank\" rel=\"noopener\">Standard 2.2.1</a> Meat and meat products. <ul><li>See section 2.2.1—8 Information about raw meat joined or formed into the semblance of a cut of meat</li></ul></li></ul>"
+                }
+              ]
+            }
+          ]
+        }
     },
     {
       "path": "/ingredients",
       "title": "Ingredients",
-      "content": "Ingredients information."
+      "content": "Ingredients information.",
+      "helpGuide": {
+        "sectionGroups": [
+          {
+            "groupTitle": "General requirements",
+            "sections": [
+              {
+                "id": "ingredient-list",
+                "title": "What is an ingredient list?",
+                "content": "<p>The ingredient list is a statement of ingredients that are used to make the food. The ingredient list must be shown on the label for most packaged food.</p><p>Some packaged foods do not need an ingredient list. For example:</p><ul><li>Individual portion packs</li><li><a data-accordion-item=\"food-package\" class=\"accordion-btn\">Foods in small packages</a></li><li><a data-accordion-item=\"one-ingredient\" class=\"accordion-btn\">Foods with one ingredient</a></li><li>Water that is packaged and labelled in accordance with <a href=\"https://www.legislation.gov.au/Series/F2015L00465\" target=\"_blank\" rel=\"noopener\">Standard 2.6.2</a> of the Food Standards Code. See <a data-accordion-item=\"non-alcoholic\" class=\"accordion-btn\">non-alcoholic drinks</a> in food with extra requirements for more information.</li><li>Whole or cut fruit and vegetables in packaging that does not obscure its nature or quality.</li></ul><p>An ingredient is to be listed using either:</p><ul><li>the common name</li><li>a name that describes the true nature of the ingredient</li><li>a <a data-accordion-item=\"generic-name\" class=\"accordion-btn\">generic name</a> specified in the Food Standards Code.</li><li>a <a href=\"#required-name\">required name</a> if the ingredient is, or contains, an allergen</li></ul><p>The ingredient name may also need a further description to ensure that the consumer is not misled about the nature of an ingredient. For example: if cheese powder is used as an ingredient, it should be listed as “cheese powder” instead of “cheese”.</p><p>Ingredients that contain allergens must be identified in the ingredient list using a <a href=\"#required-names\">required name</a>. Allergens include: <a href=\"#required-names\">cereals</a> such as barley, oats and rye that contain gluten, <a href=\"#required-names\">wheat</a>, <a href=\"#required-names\">milk</a>, <a href=\"#required-names\">egg</a>, <a href=\"#required-names\">peanuts</a>, <a href=\"#required-names\">tree nuts</a> (i.e.: almond, Brazil nut, cashew, hazelnut, macadamia, pecan, pine nut, pistachio, walnut), <a href=\"#required-names\">fish</a>, <a href=\"#required-names\">crustacea</a>, <a href=\"#required-names\">mollusc</a>, <a href=\"#required-names\">sesame seed</a>, <a href=\"#required-names\">soybeans</a>, <a href=\"#required-names\">lupin</a> and <a href=\"#required-names\">sulphites</a>.</p><p>There are requirements in the Food Standards Code for how ingredients are listed. You must:</p><ul><li>List ingredients in descending order of ingoing weight</li><li>Declare all of the ingredients that make up a <a href=\"#comp-ingredient\">compound ingredient</a>, if it contributes 5% or more to the final food.</li><li>Declare food additives including flavouring substances</li><li>Define the percentage of a characterising ingredient and component in the food.</li><li>Declare where <a href=\"#alt-ingredient\">alternative ingredients</a> are sometimes used to make the food.</li><li>Declare allergens using the <a href=\"#required-names\">required names</a> and format the required name in bold text.</li></ul><p>Some ingredients are <a href=\"#exempt-ingredient\">exempt ingredients</a> that do not need to be included in the ingredient list.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00386\" target=\"_blank\" rel=\"noopener\">Standard 1.2.1</a> Requirements to have labels or otherwise provide information</li><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00398\" target=\"_blank\" rel=\"noopener\">Standard 1.2.10</a> Information requirements – characterising ingredients and components of food</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00402\" target=\"_blank\" rel=\"noopener\">Standard 1.3.3</a> Processing aids</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00477\" target=\"_blank\" rel=\"noopener\">Schedule 7</a> Food additive class names (for statement of ingredients)</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00478\" target=\"_blank\" rel=\"noopener\">Schedule 8</a> Food additive names and code numbers (for statement of ingredients)</li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00442\" target=\"_blank\" rel=\"noopener\">Schedule 16</a> Types of substances that may be used as food additives</li></ul><p>Food Standards Australia and New Zealand</p><ul><li><a href=\"https://www.foodstandards.gov.au/code/userguide/pages/overviewoffoodlabell1267.aspx\" target=\"_blank\" rel=\"noopener\">User Guides - Overview of Food Labelling</a></li></ul>"
+              },
+              {
+                "id": "alt-ingredient",
+                "title": "Alternative ingredients",
+                "content": "<p>Where from time to time, a food ingredient or additive is replaced with another food or additive that serves the same function, both can be listed, provided it is clear that a substitute or alternative ingredient is being declared.</p><p>For example, the statement of ingredients may read: safflower or sunflower oil.</p>"
+              },
+              {
+                "id": "char-ingredient",
+                "title": "Characterising ingredients",
+                "content": "<p>If you mention an ingredient, category of ingredients or a part of the food in the name on the label, then it becomes a characterising ingredient or component.</p><p>If an ingredient is usually associated with the food (for example, fruit in Christmas pudding), or is emphasised on the label in words, pictures, or graphics) then it is a characterising ingredient.</p><p>For example:</p><ul><li>Strawberries are a characterising ingredient in strawberry yogurt</li><li>Meat is a characterising ingredient in a meat pie</li><li>Honey is a characterising ingredient in a yoghurt with a picture of a pot of honey on the label</li></ul><p>The amount of the characterising ingredients in the food must be written on the label as a percentage or, if declared in the nutrition information panel, as the average quantity per serving and per unit quantity. For example, strawberry yoghurt ingredients must state <b>Strawberries (23%)</b>.</p><p>If the amount of the characterising ingredient is less than 5%, then the proportion must be given to the nearest 0.5 decimal place, e.g. Banana (4.5%)</p><p>The percentage information is not required for the following:</p><ul><li>prepared filled rolls, sandwiches, bagels or similar products</li><li>food sold at a fundraising event, for example, cake stalls and school fetes</li><li>food sold in small packages</li><li>cured and/or dried meat flesh in whole cuts or pieces</li><li>foods with one ingredient</li><li>ingredient or category of ingredients that is used in small quantities for the purpose of flavouring, for example, herb and garlic bread</li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00385\" target=\"_blank\" rel=\"noopener\">Standard 1.1.2</a> Definitions used throughout the Code<ul><li>See section 1.1.2—4 Definition of characterising component and characterising ingredient</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00386\" target=\"_blank\" rel=\"noopener\">Standard 1.2.1</a> Requirements to have labels or otherwise provide information<ul><li>See section 1.2.1—9 Information requirements for food for sale that is not required to bear a label</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00398\" target=\"_blank\" rel=\"noopener\">Standard 1.2.10</a> Information requirements – characterising ingredients and components of food.</li></ul><p>Food Standards Australia New Zealand</p><ul><li><a href=\"https://www.foodstandards.gov.au/code/userguide/pages/percentagelabelling.aspx\" target=\"_blank\" rel=\"noopener\">User Guide – Percentage labelling of food</a></li></ul>"
+              },
+              {
+                "id": "comp-ingredient",
+                "title": "Compound ingredients",
+                "content": "<p>A compound ingredient is an ingredient that contains two or more ingredients.</p><p>For example:</p><ul><li>Tomato paste is an ingredient in a pre-made pizza base. The tomato paste is a <b>compound ingredient</b> as it is made up of the following ingredients: tomato, canola oil, olive oil, sugar, salt, citric acid (330), basil, oregano.</li><li>Dark chocolate chips are used as an ingredient in chocolate chip muffins. The dark chocolate chips are a <b>compound ingredient</b> as they are made up of the following ingredients: sugar, cocoa mass, cocoa butter, natural vanilla flavour.</li></ul><p>If a food contains compound ingredients which contributes 5% or more to the final food, then all the foods and additives in that compound ingredient must be declared in the ingredient list.</p><p>If a food contains compound ingredients which contribute less than 5% to the final food, then only allergens and food additives must be listed.</p>"
+              },
+              {
+                "id": "exempt-ingredient",
+                "title": "Exempt ingredients",
+                "content": "<p>The ingredient list does not need to include:</p><ul><li>An ingredient which is completely removed during processing. For example: through evaporation.</li><li>Added water that:<ul><li>is added to reconstitute dehydrated or concentrated ingredients; or</li><li>forms part of broth, brine or syrup that is declared in the statement of ingredients or is part of the name of the food; or</li><li>constitutes less than 5% of the food; or</li></ul></li><li>A food or substance that is used as a processing aid – except in some circumstances (refer to <a href=\"#processing-aids\">processing aids</a> section).</li><li>An ingredient of a flavouring substance (additive) – except in some circumstances (refer to <a href=\"#food-additive\">food additives section</a>)</li></ul><p>The ingoing weight of water or an ingredient which is completely removed during processing must be calculated according to Standard 1.2.4—5 of the Food Standards Code and added to the statement of ingredients in the order of descending weight.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00386\" target=\"_blank\" rel=\"noopener\">Standard 1.2.1</a> Requirements to have labels or otherwise provide information</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00402\" target=\"_blank\" rel=\"noopener\">Standard 1.3.3</a> Processing aids</li></ul>"
+              },
+              {
+                "id": "food-additive",
+                "title": "Food additives and flavours",
+                "content": "<p><b>If you are adding food additives:</b><br>Food additives are substances added to foods to keep them fresh or to enhance their colour, flavour or texture. They may include food colourings, flavour enhancers (such as MSG) or a range of preservatives. Most food additives are listed on the product label, along with other ingredients, in descending order by weight (flavours are an exception and do not need to be identified).</p><p>In most cases you can define the food additive with either its name or the code number. Refer to schedule 7 and schedule 8 for food additive class names and code numbers. <br>For example, cochineal may be listed as colour (cochineal) or colour (120).</p><p>If the food additive or flavouring contains allergens: <br>The allergen must be declared in the ingredient list using the required name. For example: caramel can be listed as caramel [150a <b>milk</b>]. Monosodium L-glutamate (MSG) can be listed MSG (<b>wheat</b>).</p><p><b>If you are adding vitamins and minerals:</b><br>Vitamins  and minerals are a specific type of food additive. The vitamin or mineral may be declared using the class name of ‘vitamin’ or ‘mineral’.<br>Claims may be made about the presence of vitamins or minerals in food. However, there are complex labelling requirements for making these claims that are not covered by Label Buster.<br>It is recommended that you seek professional advice from a food labelling consultant to prepare your food label.</p><p><b>If the food is, or contains sulphites:</b><br>Sulphites must be declared in the ingredient list using the required name of ‘sulphites’ when added sulphites are in concentrations of 10mg/kg or more.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00385\" target=\"_blank\" rel=\"noopener\">Standard 1.1.2</a> Definitions used throughout the Code</li><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations<ul><li>see 1.2.3 Division 3 Mandatory declarations</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients<ul><li>See section 1.2.4—7 Declaration of substances used as food additives</li><li>See section 1.2.4—8 Declaration of vitamins and minerals</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00398\" target=\"_blank\" rel=\"noopener\">Standard 1.2.10</a> Information requirements – characterising ingredients and components of food.</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00396\" target=\"_blank\" rel=\"noopener\">Standard 1.3.1</a> Food additives</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00477\" target=\"_blank\" rel=\"noopener\">Schedule 7</a> Food additive class names (for statement of ingredients)</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00478\" target=\"_blank\" rel=\"noopener\">Schedule 8</a> Food additive names and code numbers (for statement of ingredients)</li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00442\" target=\"_blank\" rel=\"noopener\">Schedule 16</a> Types of substances that may be used as food additives</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00449\" target=\"_blank\" rel=\"noopener\">Schedule 17</a> Vitamins and minerals</li></ul>"
+              },
+              {
+                "id": "generic-name",
+                "title": "Generic names",
+                "content": "<p>Generic names may be used in the ingredient list, instead of:</p><ul><li>a common name of an ingredient, or</li><li>a name that describes the true nature of the ingredient.</li></ul><p>The following generic names of foods can be used without any specific conditions:</p><ul><li>cereals</li><li>cheese</li><li>cocoa butter</li><li>crystallised fruit</li><li>fruit</li><li>gum bases</li><li>herbs</li><li>meat</li><li>milk protein</li><li>poultry meat</li><li>spices</li><li>vegetables</li></ul><p>For example, the term ‘fruit’ can be used in place of bananas or oranges.</p><p>The following generic food names may only be used under specific conditions in the Food Standards Code:</p><ul><li><a href=\"#oils-margarine\">fats or oils</a></li><li><a href=\"#fish-seafood\">fish</a></li><li><a href=\"#meat-prod\">offal</a></li><li><a href=\"#bcr\">starch</a></li><li><a href=\"#sugar-alt\">sugar</a></li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—4 Ingredients to be listed by common, descriptive or generic name</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul>"
+              },
+              {
+                "id": "order-ingredient",
+                "title": "Order of ingredients",
+                "content": "<p>All ingredients must be listed in descending order of ingoing weight. This means that the ingredient with the greatest amount is listed first, then the ingredient with the second greatest amount and so on.</p><p>For food that is intended to be returned to its original state by the addition of water (reconstitued), the ingredients may be listed in descending order of their weight in the reconstitued food. In this instance, it must be made clear on the label.</p><h4>Further reading</h4><p>To calculate and show the ingoing weight for water and other ingredients that disappear when cooked, read:<br><i>Australia New Zealand Food Standards Code</i></p><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—5 Ingredients to be listed in descending order of ingoing weight</li></ul></li></ul>"
+              },
+              {
+                "id": "processing-aids",
+                "title": "Processing aids",
+                "content": "<p>A processing aid is a food or substance that is used during manufacture. For example, an antifoaming or clarifying agent. A processing aid is often an <a href=\"#exempt-ingredient\">exempt ingredient</a>, which does not have to be included in the ingredient list.</p><p>However, if it contains an allergen, it must be included in the ingredient list using the words ‘processing aid’ followed by the <a href=\"#required-names\">required name</a> of the allergen.</p><p>For example:</p><ul><li>Processing aid (wheat)</li><li>Processing aid (wheat, egg)</li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul><p>Australian Standard Fish Names</p><ul><li>A searchable database of Australian Standard Fish Names is available at <a href=\"http://www.fishnames.com.au\" target=\"_blank\" rel=\"noopener\">http://www.fishnames.com.au</a></li><li>Hard copies of the Australian Fish Names Standard (AS 5300) are available from FRDC’s Online Shop at <a href=\"https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/\" target=\"_blank\" rel=\"noopener\">https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/</a></li></ul>"
+              },
+              {
+                "id": "required-names",
+                "title": "Required names",
+                "content": "<p>Required names are to be used in the ingredient list and the separate summary statement to identify allergens in the food.</p><ul><li>Fish, crustacea and molluscs must be separately declared in both the ingredient list and summary statement, using ‘fish’, ‘crustacean’ and ‘mollusc’ as required names.</li><li>The following tree nuts must be declared separately in the ingredient list and summary statement using the required name– ‘almond’, ‘Brazil nut’, ‘cashew’, ‘hazelnut’, ‘macadamia’, ‘pecan’, ‘pine nut’, ‘pistachio’, ‘walnut’.</li><li>‘Wheat’ must be used as the required name in the ingredient list and summary statement when wheat (or its hybrids) is present. If gluten is present, then ‘gluten’ must also be included in the summary statement.</li><li>‘Rye’, ‘barley’ and ‘oats’ (if they contain gluten) must be used as the required names in the ingredient list when these cereals (or their hybrids) are present. However, they must be declared as ‘gluten’ in the summary statement.</li><li>Soybean must be declared in the ingredient list as either ‘soy’, ‘soya’ or ‘soybean’ and in the summary statement as ‘soy’.</li><li>The required names for other allergens for use in the ingredient list and summary statement, are ‘sulphites’ (when added in concentrations of 10 mg/kg or more), ‘milk’, ‘egg’, ‘sesame’, ‘lupin’ and ‘peanut’.</li><li>The term ‘processing aid’ (or its plural) must be listed in the ingredient list in association with the allergen/s it contains or is derived from, e.g. processing aids (wheat, egg).</li></ul><p>The required name must be the same font size as all other ingredient names and printed in bold font type.</p><p>The allergen may be present in the food as:</p><ul><li>An ingredient</li><li>An ingredient of a compound ingredient</li><li>A substance used as a processing aid, or an ingredient or component of that substance.</li><li>A substance used as a food additive, or an ingredient or component of that substance.</li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul><p>Australian Standard Fish Names</p><ul><li>A searchable database of Australian Standard Fish Names is available at <a href=\"http://www.fishnames.com.au\" target=\"_blank\" rel=\"noopener\">http://www.fishnames.com.au</a></li><li>Hard copies of the Australian Fish Names Standard (AS 5300) are available from FRDC’s Online Shop at <a href=\"https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/\" target=\"_blank\" rel=\"noopener\">https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/</a></li></ul>"
+              }
+            ]
+          },
+          {
+            "groupTitle": "Food with extra requirements",
+            "sections": [
+              {
+                "id": "bcr",
+                "title": "Breads, cereals and grains",
+                "content": "<p><b>If the ingredient is a cereal that is barley, oats, rye or a hybridised strain of barley, oats, rye:</b><br>The name of the cereal ingredient must be declared in the ingredient list using the <a href=\"#required-names\">required name</a> ‘barley’, ‘oats’, ‘rye’ when:</p><ul><li>the cereal or its hybridised strain contains gluten and the cereal is used to make foods other than beer or spirits e.g. Oats are used as an ingredient to make a muesli bar. The ingredients list for the muesli bar is described as – <b>oats</b>, coconut, sultanas, sugar, honey, cinnamon.</li></ul><p><b>If the ingredient is a cereal that is wheat or a hybridised strain of wheat:</b><br>The name of the cereal ingredient must be declared in the ingredient list using the required name ‘wheat’, other than when it is found in:</p><ul><li>beer or spirits</li><li>alcohol distilled from wheat</li><li>glucose syrups that are made from wheat starch and that:<ul><li>have been subject to a refining process that has removed gluten protein content to the lowest level that is reasonably achievable, not exceeding 20mg/kg.</li></ul>e.g. 1. If spelt is an ingredient, the required name ‘wheat’ must be used in the ingredient list i.e. spelt (<b>wheat</b>) 2. If triticale (a wheat rye hybrid) is an ingredient, the required names ‘wheat’ and ‘rye’ must be used in the ingredient list as – triticale (<b>wheat, rye</b>).</li></ul><p><b>If the ingredient is starch:</b><br>The generic name of ‘starch’ may be used to describe an ingredient for any unmodified starch or any starch which has been modified by other means or enzymes.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—4 Ingredients to be listed by common, descriptive or generic name</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul>"
+              },
+              {
+                "id": "eggs",
+                "title": "Eggs and egg products",
+                "content": "<p><b>If the food is, or contains eggs:</b><br>Egg must be declared in the ingredient list using the <a href=\"#required-names\">required name</a> of 'egg' or 'eggs'. For example: The ingredients list for egg noodles is described as -- <b>Wheat</b> flour, water, <b>eggs</b>, salt.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations<ul><li>See 1.2.3 Division 3 Mandatory declarations</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul>"
+              },
+              {
+                "id": "fish-seafood",
+                "title": "Fish, crustacea and seafood",
+                "content": "<p><b>If the food is, or contains crustacea:</b><br>The name of the crustacea, followed by the required name ‘crustacean’ must be declared in the ingredient list.<br>e.g. crab (<b>crustacean</b>), crayfish (<b>crustacean</b>).</p><p><b>If the food is, or contains fish:</b><br>The name of the crustacea, followed by the required name ‘fish’ must be declared in the ingredient list.<br>e.g. barramundi (<b>fish</b>), hake (<b>fish</b>).</p><p><b>If the food is, or contains molluscs:</b><br>The name of the mollusc, followed by the required name ‘mollusc’ must be declared in the ingredient list.<br>e.g. oyster (<b>mollusc</b>), squid (<b>mollusc</b>).</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00397\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations<ul><li>See section 1.2.3—4 Mandatory declaration of certain foods or substances in food</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul><p>Australian Standard Fish Names</p><ul><li>A searchable database of Australian Standard Fish Names is available at <a href=\"http://www.fishnames.com.au\" target=\"_blank\" rel=\"noopener\">http://www.fishnames.com.au</a></li><li>Hard copies of the Australian Fish Names Standard (AS 5300) are available from FRDC’s Online Shop at <a href=\"https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/\" target=\"_blank\" rel=\"noopener\">https://infostore.saiglobal.com/en-au/Standards/AS-5300-2019-111200_SAIG_AS_AS_2741382/</a></li></ul>"
+              },
+              {
+                "id": "fruit-veg",
+                "title": "Fruit and vegetables",
+                "content": "<p><b>If the food is a juice blend:</b><br>The name and percentage of the of the juice in the blend must be included in the ingredients. For example: Tropical juice (Pineapple 50%, mango 20%, oranges 10%, apple 10%, passionfruit 5%, peach puree 5%)</p><p><b>If the food is an orange juice blend:</b><br>Where an orange juice blend has less than 10% in total of:<ul><li>mandarin juice; or</li><li>tangelo juice; or</li><li>mandarin and tangelo juice</li></ul>the orange juice is not required to be labelled as a juice blend.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00426\" target=\"_blank\" rel=\"noopener\">Standard 2.6.1</a> Fruit juice and vegetable juice</li></ul>"
+              },
+              {
+                "id": "legumes-pulses",
+                "title": "Legumes and pulses",
+                "content": "<p><b>If the food is, or contains soy</b><br>Soy must be declared in the ingredient list using the <a href=\"#required-names\">required name</a> of either 'soy', 'soya', or 'soybean', except for:</p><ul><li>soybean oil that has been degummed, neutralised, bleached and deodorised</li><li>soybean derivatives that are tocopherol or phytosterol</li></ul><p><b>If the food is, or contains lupin:</b><br>Lupin must be declared in the ingredient list using the <a href=\"#required-names\">required name</a> of 'lupin'.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements -- warning statements, advisory statements and declarations<ul><li>See 1.2.3 Division 3 mandatory declarations</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul>"
+              },
+              {
+                "id": "meat-prod",
+                "title": "Meat and meat products",
+                "content": "<p><b>If the food is minced meat:</b> the maximum proportion of fat in the mince must be provided.</p><p><b>If the food contains offal:</b><br>Offal includes blood, brain, heart, kidney, liver, pancreas, spleen, thymus, tongue and tripe, and excludes meat flesh, bone and bone marrow.</p><p>For brain, heart, kidney, liver, tongue or tripe, the food name or description must be identified as either:</p><ul><li>offal</li><li>the specific name of the type of offal</li></ul><p>For any other type of offal, the food name or description must be identified by the specific name of the type of offal.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—4 Ingredients to be listed by common, descriptive or generic name</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00427\" target=\"_blank\" rel=\"noopener\">Standard 2.2.1</a> Meat and meat products.<ul><li>See section 2.2.1—6 Statement indicating the presence of offal</li><li>See section 2.2.1—7 Proportion of fat in minced meat</li></ul></li></ul>"
+              },
+              {
+                "id": "milk-dairy",
+                "title": "Milk, dairy and dairy substitutes",
+                "content": "<p>Milk or food or ingredients containing milk must be identified in the ingredient list using the required name ‘milk’ (except when the food is alcohol distilled from whey).</p><p>If the ingredient name contains the word ‘milk’ as a separate word, it meets the required name requirements, but the required name must be in <b>bold</b> type e.g. <b>milk</b> solids, <b>milk</b> protein.</p><p>The required name must be a separate word. For example, buttermilk must be listed in the ingredient list as buttermilk (<b>milk</b>).</p><p>If the ingredient name does not include the required name, then the required name must be provided with the ingredient name. For example: cheese (<b>milk</b>).</p><p><b>The generic name of ‘milk solid’ may be used to describe an ingredient that is:</b></p><ul><li>Milk powder, skim milk powder or dried milk products; or</li><li>Any 2 or more of the following ingredients:<ul><li>whey</li><li>whey powder</li><li>whey proteins</li><li>lactose</li><li>caseinates</li><li>milk proteins</li><li>milk fat.</li></ul></li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—4 Ingredients to be listed by common, descriptive or generic name</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul>"
+              },
+              {
+                "id": "non-alcoholic",
+                "title": "Non-alcoholic drinks",
+                "content": "<p><b>If the food is packaged water:</b><br>The ingredients list is not required for a water that is packaged and labelled to the requirements of <a href=\"https://www.legislation.gov.au/Series/F2015L00465\" target=\"_blank\" rel=\"noopener\">Standard 2.6.2.</a></p><p><b>If the food is a juice blend:</b><br>The name and percentage of the of the juice in the blend must be included in the ingredients. For example: Tropical juice (Pineapple 50%, mango 20%, oranges 10%, apple 10%, passionfruit 5%, peach puree 5%)</p><p><b>If the food is an orange juice blend:</b><br>Where an orange juice blend has less than 10% in total of:<ul><li>mandarin juice; or</li><li>tangelo juice; or</li><li>mandarin and tangelo juice</li></ul>the orange juice is not required to be labelled as a juice blend</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—2 Requirement for statement of ingredients</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00426\" target=\"_blank\" rel=\"noopener\">Standard 2.6.1</a> Fruit juice and vegetable juice</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00465\" target=\"_blank\" rel=\"noopener\">Standard 2.6.2</a> Non-alcoholic beverages and brewed soft drinks</li></ul>"
+              },
+              {
+                "id": "nuts-seeds",
+                "title": "Nuts and seeds",
+                "content": "<p><b>If the food is, or contains nuts:</b><br>The name of the nut must be declared in the ingredient list using the required name for the nut:</p><ul><li>almond</li><li>Brazil nut</li><li>cashew</li><li>hazelnut</li><li>macadamia</li><li>peanut</li><li>pecan</li><li>pine nut</li><li>pistachio</li><li>walnut.</li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations<ul><li>see 1.2.3 Division 3 Mandatory declarations</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00479/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul>"
+              },
+              {
+                "id": "oils-margarine",
+                "title": "Oils and margarine",
+                "content": "<p><b>If using the generic name of fats or oils:</b><br>The ingredient list must declare:</p><ul><li>whether the source is animal or vegetable</li><li>if the food is a dairy product, including ice cream – the specific source of animal fats or oils.</li></ul><p>The generic name must not be used for diacylglycerol oil.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/F2015L00461/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 2.4.2</a> Edible oil spreads</li><li><a href=\"https://www.legislation.gov.au/F2015L00392/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients<ul><li>see section 1.2.4 Ingredients to be listed by common, descriptive or generic name.</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00480/latest/text\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul>"
+              },
+              {
+                "id": "sugar-alt",
+                "title": "Sugar and sugar alternatives",
+                "content": "<p><b>If the food is, or contains sugar:</b><br>The name “sugars” must not be used in the ingredient list.</p><p><b>The generic name of sugar may be used to describe an ingredient that is:</b></p><ul><li>white sugar</li><li>white refined sugar</li><li>caster sugar or castor sugar</li><li>loaf sugar or cube sugar</li><li>icing sugar</li><li>coffee sugar</li><li>coffee crystals</li><li>raw sugar</li></ul><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—4 Ingredients to be listed by common, descriptive or generic name</li></ul></li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00480\" target=\"_blank\" rel=\"noopener\">Schedule 10</a> Generic names of ingredients and conditions for their use</li></ul>"
+              },
+              {
+                "id": "food-package",
+                "title": "Food in small packages",
+                "content": "<p><b>If the food sold in a small package where the package has a surface area of less than 100 cm<sup>2</sup>:</b><br>The ingredient list is not required is not required for food in small packages.<br>For example: A small a packet of chewing gum or a small bar of chocolate.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—2 Requirement for statement of ingredients</li></ul></li></ul>"
+              },
+              {
+                "id": "one-ingredient",
+                "title": "Food with one ingredient",
+                "content": "<p><b>If the food has only one ingredient:</b><br>the ingredient list is not required.<br>For example: A bag of rice, frozen corn kernels, apple juice.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00392\" target=\"_blank\" rel=\"noopener\">Standard 1.2.4</a> Information requirements – statement of ingredients.<ul><li>See section 1.2.4—2 Requirement for statement of ingredients</li></ul></li></ul>"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "path": "/statements",
       "title": "Statements",
-      "content": "Statements information."
+      "content": "Statements information.",
+      "helpGuide": {
+        "sectionGroups": [
+          {
+            "groupTitle": "General requirements",
+            "sections": [
+              {
+                "id": "ad-statement",
+                "title": "Advisory statements",
+                "content": "<p>Advisory statements let consumers know important information about the safety (e.g. unpasteurised), suitability (e.g. not suitable as a complete milk replacement for children under 5 years) and effect (e.g. laxative) of the food or ingredient.</p><p>An advisory statement must provide the same meaning as the statement listed in the Food Standards Code but can be written in your own words.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Details/F2017C00418\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Details/F2016C00827\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul><p>Food Standards Australia and New Zealand</p><ul><li><a href=\"https://www.foodstandards.gov.au/code/userguide/Documents/Guide%20to%201.2.3%20-%20Warning%20and%20Advisory%20Statements.pdf\" target=\"_blank\" rel=\"noopener\">User Guide – Warning and Advisory Statements and Declarations</a></li></ul>"
+              },
+              {
+                "id": "alt-declaration",
+                "title": "Allergen declarations",
+                "content": "<p>Some foods and ingredients can cause allergic reactions and must be stated on the label.</p><p>You must state any allergen listed in Standard 1.2.3 when present in a food as:</p><ul><li>An ingredient</li><li>An ingredient of a compound ingredient</li><li>A substance used as a food additive</li><li>An ingredient or component of a food additive</li><li>A substance or food used as a processing aid</li><li>An ingredient or component of a processing aid.</li></ul><p>The presence of an allergen in a food must be included in the ingredient list and in a summary statement using the required names. The summary statement must be:</p><ul><li>separate from the ingredient list</li><li>located near the ingredient list</li><li>printed in bold font</li><li>use the same typeface and size as the ingredient list</li><li>start with the word ‘Contains’</li><li>must not include any other words except for the required names that can be used for the summary statement.</li></ul><p>Note: Sometimes a different required name must be used in the ingredient list and summary statement.</p><p>Allergen declarations are required on individual portion packs that have a surface area of 30cm2 or greater.</p><h4>Further reading</h4><p><i>Australia New Zealand Food Standards Code</i></p><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00386\" target=\"_blank\" rel=\"noopener\">Standard 1.2.1</a> Requirement to have labels or otherwise provide information<ul><li>See section 1.2.1—6 When the food for sale must bear a label</li></ul></li><li><a href=\"https://www.legislation.gov.au/F2015L00397/latest/text\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations.<ul><li>See 1.2.3 Division 3 Mandatory declarations</li></ul></li><li><a href=\"https://www.legislation.gov.au/Details/F2016C00827\" target=\"_blank\" rel=\"noopener\">Schedule 9</a> Mandatory advisory statements and declarations</li></ul><p>Allergen Bureau - the peak industry body representing food industry allergen management in Australia and New Zealand.</p><ul><li>https://allergenbureau.net/</li></ul>"
+              },
+              {
+                "id": "warn-statement",
+                "title": "Warning statements",
+                "content": "<p>The warning statement must be displayed on the label in the exact words and type size as specified in the Food Standards Code. Warning statements must be a minimum size of type of 3 mm. In the case of small packages, a minimum size of type of 1.5 mm is required.<br>Warning statement are required on individual portions packs that have a surface area of 30cm2 or greater.</p><h4>Further reading</h4><i>Australia New Zealand Food Standards Code</i><ul><li><a href=\"https://www.legislation.gov.au/Series/F2015L00386\" target=\"_blank\" rel=\"noopener\">Standard 1.2.1</a> Requirement to have labels or otherwise provide information<ul><li>See section 1.2.1—6 When the food for sale must bear a label</li></ul></li><li><a href=\"https://www.legislation.gov.au/Details/F2017C00418\" target=\"_blank\" rel=\"noopener\">Standard 1.2.3</a> Information requirements – warning statements, advisory statements and declarations</li><li><a href=\"https://www.legislation.gov.au/Series/F2015L00466\" target=\"_blank\" rel=\"noopener\">Standard 2.6.3</a> Kava</li></ul><p>Food Standards Australia and New Zealand</p><ul><li><a href=\"https://www.foodstandards.gov.au/code/userguide/Documents/Guide%20to%201.2.3%20-%20Warning%20and%20Advisory%20Statements.pdf\" target=\"_blank\" rel=\"noopener\">User Guide – Warning and Advisory Statements and Declarations</a></li></ul>"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "path": "/your-label",
-      "title": "Your Label",
-      "content": "Your label information."
-    },
-    {
-      "path": "/example-page",
-      "title": "Example Page",
-      "content": "This is an example page."
+      "title": "Your label information",
+      "content": [
+        {
+          "type": "inpage-alert",
+          "alertType": "success",
+          "heading": "Congratulations! You have completed all the steps in Label Buster.",
+          "content": "<p>Using your responses to each question, Label Buster has generated a product sheet and an example food label.</p>"
+        },
+        {
+          "type": "html",
+          "content": "<p><strong>Don’t forget</strong> to refer to the <a href=\"https://www.health.qld.gov.au/__data/assets/pdf_file/0030/1126947/allergen-labelling.pdf\" target=\"_blank\">Allergen labelling</a> fact sheet to make the changes required to ensure that your label is fully compliant with the Food Standards Code requirements. </p>"
+        },
+        {
+          "type": "html",
+          "content": "<p>If you have trouble or have any further questions in relation to incorporating the allergen requirements into your label, please contact the Food Safety Standards and Regulation Unit via <a href=\"mailto:foodsafety@health.qld.gov.au\">foodsafety@health.qld.gov.au</a> or phone (07) 3328 9310.</p>"
+        },
+        {
+          "type": "html",
+          "content": "<p>Label Buster is a brief guide to help you understand your labelling requirements. You may choose to get advice from a labelling consultant to make sure that your label complies with the Food Standards Code. </p>"
+        },
+        {
+          "type": "html",
+          "content": "<p>On this page, you will find:</p><ul> <li> <a href=\"#product-sheet\">Product sheet</a> </li> <li> <a href=\"#example-label\">Example food label</a> </li> <li> <a href=\"#legibility-requirements\">Legibility requirements</a> </li> <li> <a href=\"#exemptions\">Exemptions</a> </li> <li> <a href=\"#extra-requirements\">Food with extra requirements</a> </li> <li> <a href=\"#download-email\">Email your summary</a> </li> <li> <a href=\"#update\">Need to update your label?</a> </li> </ul>"
+        }
+      ]
     }
   ]
 }

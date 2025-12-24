@@ -103,6 +103,7 @@ export function Select(props: SelectProps) {
   return (
     <div className="qgds-select-wrapper">
       <label className={`qld-text-input-label${required ? " field-required" : ""}`} htmlFor={id}>
+        {required && ' '}
         {renderTextOrList(label)}
         {optional && <span className="label-text-optional"> (optional)</span>}
       </label>

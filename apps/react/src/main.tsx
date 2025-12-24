@@ -45,7 +45,6 @@ function PageContent({
   const navigate = useNavigate();
   const config = __APP_CONFIG__ || {};
   const pages = config.pages || [];
-  
   const currentPage = pages.find((p: any) => p.path === location.pathname);
   
   // Redirect / to first page
@@ -56,7 +55,6 @@ function PageContent({
   }, [location.pathname, pages, navigate]);
   
   // Keep validation state across navigation within the session
-  
   if (!currentPage) {
     // If we're at / and about to redirect, show loading
     if (location.pathname === "/" && pages.length > 0) {
@@ -146,6 +144,7 @@ function PageContent({
     });
   };
   
+  {/* Debug: {config.appName} v:{config.version} */}
   return (
     <>
       <h1>{currentPage.title}</h1>
@@ -361,7 +360,6 @@ function App() {
         />
       </div>
       <div className="col-12 ps-lg-64 col-lg-6 mb-4">
-        {/* Debug: {config.appName} v{config.version} */}
         <PageContent 
           validationState={validationState} 
           setValidationState={setValidationState}
