@@ -1376,22 +1376,6 @@
                   "required": true
                 },
                 {
-                  "id": "q_shelf_life_less_7_days",
-                  "required": true
-                },
-                {
-                  "id": "q_eaten_before_certain_date",
-                  "required": true
-                },
-                {
-                  "id": "q_date_mark_type",
-                  "required": true
-                },
-                {
-                  "id": "q_date_for_food",
-                  "required": true
-                },
-                {
                   "id": "q_lot_identifification",
                   "required": true
                 }
@@ -1458,7 +1442,239 @@
     {
       "path": "/storage-and-use",
       "title": "Storage and use",
-        "content": "Storage and use information.",
+        "content": [
+          {
+            "type": "callout",
+            "description": "<p>Storage conditions describe how to keep food until its best-before or use-by date. Directions for use are instructions for how to prepare the food so that it is ready to eat.</p>",
+            "className": "mb-4"
+          },
+          {
+            "type": "html",
+            "content": "<h2>Storage conditions</h2>"
+          },
+          {
+            "type": "questionaire",
+            "questions": [
+              {
+                "id": "q_select_storage_conditions",
+                "label": {
+                  "heading": [
+                    "Select the ",
+                    {
+                      "type": "link",
+                      "text": "storage conditions",
+                      "href": "helpGuide#storage-conditions"
+                    },
+                    " for your food."
+                  ],
+                  "intro": "If your food has specific storage conditions to make sure it will keep until the best-before or use-by date, then you must include these on the label. Examples of some storage conditions have been included. You may select none, or one or more of these, depending on your requirements.",
+                  "list": []
+                },
+                "type": "multi",
+                "options": [
+                  { "label": "Store in cool dry conditions.", "value": "cool-dry" },
+                  { "label": "Refrigerate after opening.", "value": "refrigerate-after-opening" },
+                  { "label": "Refrigerate after purchase.", "value": "refrigerate-after-purchase" },
+                  { "label": "Keep refrigerated at", "value": "keep-refrigerated-at", 
+                    "extraInputs": [
+                      { "type": "number", "id": "minTemp", "label": "Min temp (°C)" }, 
+                      { "type": "number", "id": "maxTemp", "label": "Max temp (°C)" }
+                    ]
+                  },
+                  { "label": "Keep refrigerated at or below", "value": "keep-refrigerated-at-or-below", 
+                    "extraInputs": [
+                      { "type": "number", "id": "maxTemp", "label": "Max temp (°C)" }
+                    ]
+                  },
+                  { "label": "Keep frozen solid.", "value": "keep-frozen-solid" },
+                  { "label": "Keep frozen solid until ready to use.", "value": "keep-frozen-solid-until-ready-to-use" },
+                  {
+                    "label": "Other, please enter.",
+                    "value": "other",
+                    "extraInputs": [
+                      {
+                        "type": "textarea",
+                        "id": "otherDetails",
+                        "label": "Please enter details (max 1000 characters)",
+                        "maxChars": 1000,
+                        "errorMessage": "Details must be less than 1000 characters."
+                      }
+                    ]
+                  }
+                ],
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": "inpage-alert",
+            "alertType": "info",
+            "heading": "The storage conditions should be shown on the food label as:",
+            "content": "<strong>Storage conditions:</strong> ",
+            "appendFromAnswers": {
+              "questionId": "q_select_storage_conditions",
+              "optionsMap": {
+                "cool-dry": "Store in cool dry conditions.",
+                "refrigerate-after-opening": "Refrigerate after opening.",
+                "refrigerate-after-purchase": "Refrigerate after purchase.",
+                "keep-refrigerated-at": "Keep refrigerated at",
+                "keep-refrigerated-at-or-below": "Keep refrigerated at or below",
+                "keep-frozen-solid": "Keep frozen solid.",
+                "keep-frozen-solid-until-ready-to-use": "Keep frozen solid until ready to use.",
+                "other": "Other, please enter."
+              },
+              "separator": " "
+            }
+          },
+          {
+            "type": "html",
+            "content": "<h2>Directions for use</h2>"
+          },
+          {
+            "type": "questionaire",
+            "questions": [
+              {
+                "id": "q_directs_for_use",
+                "label": {
+                  "heading": [
+                    "Select the ",
+                    {
+                      "type": "link",
+                      "text": "directions for use",
+                      "href": "helpGuide#directions-for-use"
+                    },
+                    " for your food."
+                  ],
+                  "intro": "All food must include directions for the use if those directions are required for health or safety reasons. The directions for use are the instructions for how to prepare the food so it is ready to eat. Examples of some directions for use have been included. You may select none, or one or more of these, depending on your requirements.",
+                  "list": []
+                },
+                "type": "multi",
+                "options": [
+                  { "label": "Wash before use.", "value": "wash-before-use" },
+                  { "label": "Once opened, store in an airtight container.", "value": "once-opened-store-in-airtight-container" },
+                  { "label": "Shake well before use.", "value": "shake-well-before-use" },
+                  { "label": "Food should be drained before consumption.", "value": "food-should-be-drained-before-consumption" },
+                  { "label": "Once opened, keep refrigerated.", "value": "once-opened-keep-refrigerated" },
+                  { "label": "Consume within", "value": "consume-within", 
+                    "extraInputs": [
+                      { "type": "number", "id": "daysOpen", "label": "days of opening." }
+                    ]
+                  },
+                  { "label": "Thaw before cooking.", "value": "thaw-before-cooking" },
+                  { "label": "Cook from frozen.", "value": "cook-from-frozen" },
+                  { "label": "Once thawed, do not refreeze.", "value": "once-thawed-do-not-refreeze" },
+                  { "label": "Once thawed, use within", "value": "use-within", 
+                    "extraInputs": [
+                      { "type": "number", "id": "useWithinHours", "label": "hours." }
+                    ]
+                  },
+                  { "label": "Not suitable for microwave cooking.", "value": "not-suitable-for-microwave-cooking" },
+                  { "label": "This is a raw product and must be cooked before eating.", "value": "must-be-cooked-before-eating" },
+                  { "label": "Cook until steaming hot in the middle.", "value": "cook-until-steaming-hot" },
+                  { "label": "Microwave on", "value": "microwave-on", 
+                    "extraInputs": [
+                      { "type": "number", "id": "level", "label": "Microwave level" }, 
+                      { "type": "number", "id": "temp", "label": "For" }
+                    ]
+                  },
+                  { "label": "Caution, contents may be hot after heating.", "value": "caution-contents-may-be-hot-after-heating" },
+                  { "label": "Cook for", "value": "cook-for", 
+                    "extraInputs": [
+                      { "type": "number", "id": "minutes", "label": "Minutes" }, 
+                      { "type": "number", "id": "temp", "label": "(°C)" }
+                    ]
+                  },
+                  { "label": "Allow to stand for", "value": "allow-to-stand-for", 
+                    "extraInputs": [
+                      { "type": "number", "id": "minutesBeforeServing", "label": "minutes before serving." }
+                    ]
+                  },
+                  { "label": "Do not refrigerate or reheat once heated.", "value": "do-not-refrigerate-or-reheat-once-heated" },
+                  { "label": "Care has been taken to remove all bones from this product, however some bones may remain.", "value": "care-has-been-taken-to-remove-all-bones" },
+                  {
+                    "label": "Other directions for use, please enter.",
+                    "value": "other-directions-for-use",
+                    "extraInputs": [
+                      {
+                        "type": "textarea",
+                        "id": "otherDirectionsForUseDetails",
+                        "label": "The other directions for use details must be entered when other is selected as a direction for use.",
+                        "maxChars": 1000,
+                        "errorMessage": "Details must be less than 1000 characters."
+                      }
+                    ]
+                  },
+                  {
+                    "label": "Cooking / preparation instructions, please enter.",
+                    "value": "cooking-preparation-instructions",
+                    "extraInputs": [
+                      {
+                        "type": "textarea",
+                        "id": "otherDirectionsForUseDetails",
+                        "label": "The cooking / preparation instructions must be entered when the selected as a direction for use.",
+                        "maxChars": 1000,
+                        "errorMessage": "The cooking / preparation instruction details must have less than 1000 characters."
+                      }
+                    ]
+                  }
+                ],
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": "inpage-alert",
+            "alertType": "info",
+            "heading": "The directions for use should be shown on the food label as:",
+            "content": "<strong>Directions for use:</strong> ",
+            "appendFromAnswers": {
+              "questionId": "q_directs_for_use",
+              "optionsMap": {
+                "wash-before-use": "Wash before use.",
+                "once-opened-store-in-airtight-container": "Once opened, store in an airtight container.",
+                "shake-well-before-use": "Shake well before use.",
+                "food-should-be-drained-before-consumption": "Food should be drained before consumption.",
+                "once-opened-keep-refrigerated": "Once opened, keep refrigerated.",
+                "consume-within": "Consume within {daysOpen} days of opening.",
+                "thaw-before-cooking": "Thaw before cooking.",
+                "cook-from-frozen": "Cook from frozen.",
+                "once-thawed-do-not-refreeze": "Once thawed, do not refreeze.",
+                "use-within": "Once thawed, use within {useWithinHours} hours.",
+                "not-suitable-for-microwave-cooking": "Not suitable for microwave cooking.",
+                "must-be-cooked-before-eating": "This is a raw product and must be cooked before eating.",
+                "cook-until-steaming-hot": "Cook until steaming hot in the middle.",
+                "microwave-on": "Microwave on level {level} for {temp} minutes.",
+                "caution-contents-may-be-hot-after-heating": "Caution, contents may be hot after heating.",
+                "cook-for": "Cook for {minutes} minutes at {temp}°C.",
+                "allow-to-stand-for": "Allow to stand for {minutesBeforeServing} minutes before serving.",
+                "do-not-refrigerate-or-reheat-once-heated": "Do not refrigerate or reheat once heated.",
+                "care-has-been-taken-to-remove-all-bones": "Care has been taken to remove all bones from this product, however some bones may remain.",
+                "other-directions-for-use": "__EXTRA_INPUT__",
+                "cooking-preparation-instructions": "__EXTRA_INPUT__"
+              },
+              "separator": " "
+            }
+          },
+          {
+            "type": "button-group",
+            "buttons": [
+              {
+                "text": "Back",
+                "link": "/food-name",
+                "variant": "secondary",
+                "action": "navigate",
+                "requiresValidation": false
+              },
+              {
+                "text": "Next",
+                "link": "/ingredients",
+                "variant": "primary",
+                "action": "navigate",
+                "requiresValidation": true
+              }
+            ]
+          }
+        ],
         "helpGuide": {
           "sectionGroups": [
             {
@@ -1507,7 +1723,27 @@
     {
       "path": "/ingredients",
       "title": "Ingredients",
-      "content": "Ingredients information.",
+      "content": [
+        {
+          "type": "button-group",
+          "buttons": [
+            {
+              "text": "Back",
+              "link": "/food-name",
+              "variant": "secondary",
+              "action": "navigate",
+              "requiresValidation": false
+            },
+            {
+              "text": "Next",
+              "link": "/statements",
+              "variant": "primary",
+              "action": "navigate",
+              "requiresValidation": true
+            }
+          ]
+        }
+      ],
       "helpGuide": {
         "sectionGroups": [
           {
@@ -1641,7 +1877,27 @@
     {
       "path": "/statements",
       "title": "Statements",
-      "content": "Statements information.",
+      "content": [
+        {
+          "type": "button-group",
+          "buttons": [
+            {
+              "text": "Back",
+              "link": "/food-name",
+              "variant": "secondary",
+              "action": "navigate",
+              "requiresValidation": false
+            },
+            {
+              "text": "Next",
+              "link": "/your-label",
+              "variant": "primary",
+              "action": "navigate",
+              "requiresValidation": true
+            }
+          ]
+        }
+      ],
       "helpGuide": {
         "sectionGroups": [
           {
@@ -1692,6 +1948,18 @@
         {
           "type": "html",
           "content": "<p>On this page, you will find:</p><ul> <li> <a href=\"#product-sheet\">Product sheet</a> </li> <li> <a href=\"#example-label\">Example food label</a> </li> <li> <a href=\"#legibility-requirements\">Legibility requirements</a> </li> <li> <a href=\"#exemptions\">Exemptions</a> </li> <li> <a href=\"#extra-requirements\">Food with extra requirements</a> </li> <li> <a href=\"#download-email\">Email your summary</a> </li> <li> <a href=\"#update\">Need to update your label?</a> </li> </ul>"
+        },
+        {
+          "type": "button-group",
+          "buttons": [
+            {
+              "text": "Back",
+              "link": "/food-name",
+              "variant": "secondary",
+              "action": "navigate",
+              "requiresValidation": false
+            }
+          ]
         }
       ]
     }

@@ -161,6 +161,8 @@ function PageContent({
                 type={item.alertType || "info"}
                 heading={item.heading}
                 content={item.content}
+                // Only pass answers and appendFromAnswers if config present (non-breaking)
+                {...(item.appendFromAnswers ? { answers: validationState, appendFromAnswers: item.appendFromAnswers } : {})}
               />
             );
           case "button":

@@ -7,6 +7,12 @@ interface InpageAlertProps {
   content: string;
   customClass?: string;
   ariaLabel?: string;
+  answers?: Record<string, any>;
+  appendFromAnswers?: {
+    questionId: string;
+    optionsMap: Record<string, string>;
+    separator?: string;
+  };
 }
 
 export function InpageAlert({ 
@@ -15,15 +21,49 @@ export function InpageAlert({
   headingTag = "h2",
   content,
   customClass = "",
-  ariaLabel
+  ariaLabel,
+  answers,
+  appendFromAnswers
 }: InpageAlertProps) {
   const variantClass = `alert-${type}`;
-  
   // Default aria-labels based on type
   const defaultAriaLabel = ariaLabel || `${type.charAt(0).toUpperCase() + type.slice(1)} alert`;
-  
   const HeadingTag = headingTag;
-  
+
+  let appendedContent = content;
+  if (appendFromAnswers && answers) {
+    const selected = answers[appendFromAnswers.questionId];
+    const extra = answers[`${appendFromAnswers.questionId}_extra`] || {};
+    if (Array.isArray(selected) && selected.length > 0) {
+      const mapped = selected
+        .map((val) => {
+          const optionTemplate = appendFromAnswers.optionsMap[val];
+          const extraVals = extra[val];
+          // If option is a textarea-only (other), show only the value
+          if (optionTemplate === "__EXTRA_INPUT__" && extraVals) {
+            // Use first textarea value found
+            const textVal = Object.values(extraVals).find(v => typeof v === "string" && v.trim());
+            return textVal ? textVal.trim() : "";
+          }
+          // If template has {var} placeholders, replace with extra input values
+          if (optionTemplate && extraVals && /\{.+?\}/.test(optionTemplate)) {
+            let result = optionTemplate;
+            Object.entries(extraVals).forEach(([key, val]) => {
+              result = result.replace(new RegExp(`\{${key}\}`, "g"), val);
+            });
+            return result;
+          }
+          // Otherwise, just show the label
+          return optionTemplate || "";
+        })
+        .filter(Boolean)
+        .join(appendFromAnswers.separator || " ");
+      if (mapped) {
+        appendedContent = content + mapped;
+      }
+    }
+  }
+
   return (
     <div 
       className={`alert ${variantClass} ${customClass}`.trim()}
@@ -33,7 +73,7 @@ export function InpageAlert({
       {heading && (
         <HeadingTag className="alert-heading" dangerouslySetInnerHTML={{ __html: heading }} />
       )}
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div dangerouslySetInnerHTML={{ __html: appendedContent }} />
     </div>
   );
 }

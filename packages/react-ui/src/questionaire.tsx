@@ -2,9 +2,18 @@ import React from "react";
 import { Textbox } from "./textbox";
 import { Select } from "./select";
 
+interface ExtraInputConfig {
+  type: "number" | "textarea";
+  id: string;
+  label: string;
+  maxChars?: number;
+  errorMessage?: string;
+}
+
 interface QuestionOption {
   label: string;
   value: string;
+  extraInputs?: ExtraInputConfig[];
 }
 
 interface VisibleCondition {
@@ -21,7 +30,7 @@ interface QuestionConfig {
   id: string;
   label: string | string[] | LabelList;
   hint?: string | string[] | HintContent[];
-  type?: "single" | "multi" | "text" | "select";
+  type?: "single" | "multi" | "text" | "select" | "html";
   options?: QuestionOption[];
   required?: boolean;
   visibleWhen?: VisibleCondition[];
@@ -67,10 +76,16 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
           return (
             <div key={q.id} className="question mb-4">
               {q.label && (
-                <div className="qld-text-input-label" dangerouslySetInnerHTML={{ __html: typeof q.label === "string" ? q.label : (q.label.heading || "") }} />
+                <div className="qld-text-input-label" 
+                  dangerouslySetInnerHTML={{ 
+                    __html: typeof q.label === "string" 
+                      ? q.label 
+                      : (Array.isArray(q.label) ? q.label.join(" ") : (typeof (q.label as any).heading === "string" ? (q.label as any).heading : ""))
+                  }} 
+                />
               )}
               {q.hint && (
-                <div className="qld-hint-text" dangerouslySetInnerHTML={{ __html: q.hint }} />
+                <div className="qld-hint-text" dangerouslySetInnerHTML={{ __html: Array.isArray(q.hint) ? q.hint.join(" ") : (q.hint as string) }} />
               )}
             </div>
           );
@@ -119,7 +134,7 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
               />
             ) : (
               <>
-                {renderTextOrList(q.label, "mb-2", q.id, true, q.required)}
+                {renderTextOrList(q.label, "mb-4", q.id, true, q.required)}
                 {/* Render checkboxes for multi, radios for single with >2 options, else use button group for binary single */}
                 {type === "multi" ? (
                   <div>
@@ -141,18 +156,94 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
                           }
                         }
                       };
+                      // Extra input values are stored in answers[`${q.id}_extra`]?.[opt.value]?.[input.id]
+                      const extraInputValues = (answers && answers[`${q.id}_extra`] && answers[`${q.id}_extra`][opt.value]) || {};
                       return (
-                        <div className="form-check" key={opt.value}>
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`${q.id}-${opt.value}`}
-                            checked={checked}
-                            onChange={handleChange}
-                          />
-                          <label className="form-check-label" htmlFor={`${q.id}-${opt.value}`}>
-                            {opt.label}
-                          </label>
+                        <div className="form-check mb-2" key={opt.value} style={{ display: 'block' }}>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`${q.id}-${opt.value}`}
+                              checked={checked}
+                              onChange={handleChange}
+                            />
+                            <label className="form-check-label" htmlFor={`${q.id}-${opt.value}`} style={{ marginLeft: 8 }}>
+                              {opt.label}
+                            </label>
+                          </div>
+                          {checked && opt.extraInputs && (
+                            <div className="extra-inputs-container" style={{ display: 'block', width: '100%', marginLeft: 0, marginTop: 12 }}>
+                              {opt.extraInputs.map((input) => (
+                                <div key={input.id} style={{ marginBottom: 16, width: '100%' }}>
+                                  {input.type === "number" ? (
+                                    <div className="form-group" style={{ display: 'flex', flexDirection: 'column', maxWidth: 200, width: '100%' }}>
+                                      <label htmlFor={`${q.id}_extra_${opt.value}_${input.id}`} style={{ fontWeight: 500, marginBottom: 4 }}>{input.label}</label>
+                                      <input
+                                        id={`${q.id}_extra_${opt.value}_${input.id}`}
+                                        type="number"
+                                        className="form-control"
+                                        style={{ width: '100%' }}
+                                        value={extraInputValues[input.id] ?? ""}
+                                        min={-100}
+                                        max={100}
+                                        onChange={e => {
+                                          const val = e.target.value;
+                                          onAnswerChange(
+                                            `${q.id}_extra`,
+                                            {
+                                              ...(answers[`${q.id}_extra`] || {}),
+                                              [opt.value]: {
+                                                ...(answers[`${q.id}_extra`] && answers[`${q.id}_extra`][opt.value] ? answers[`${q.id}_extra`][opt.value] : {}),
+                                                [input.id]: val
+                                              }
+                                            }
+                                          );
+                                        }}
+                                        placeholder={input.label}
+                                      />
+                                    </div>
+                                  ) : input.type === "textarea" ? (
+                                    <div className="form-group" style={{ display: 'flex', flexDirection: 'column', maxWidth: 500, width: '100%' }}>
+                                      <label htmlFor={`${q.id}_extra_${opt.value}_${input.id}`} style={{ fontWeight: 500, marginBottom: 4 }}>{input.label}</label>
+                                      <textarea
+                                        id={`${q.id}_extra_${opt.value}_${input.id}`}
+                                        className="form-control"
+                                        value={extraInputValues[input.id] ?? ""}
+                                        maxLength={input.maxChars}
+                                        onChange={e => {
+                                          const val = e.target.value;
+                                          onAnswerChange(
+                                            `${q.id}_extra`,
+                                            {
+                                              ...(answers[`${q.id}_extra`] || {}),
+                                              [opt.value]: {
+                                                ...(answers[`${q.id}_extra`] && answers[`${q.id}_extra`][opt.value] ? answers[`${q.id}_extra`][opt.value] : {}),
+                                                [input.id]: val
+                                              }
+                                            }
+                                          );
+                                        }}
+                                        placeholder={input.label}
+                                        rows={3}
+                                        style={{ resize: 'vertical', width: '100%' }}
+                                      />
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        {input.maxChars && (
+                                          <div className="mt-2 character-count" style={{ fontSize: 12, color: '#666' }}>
+                                            {(extraInputValues[input.id] || "").length}/{input.maxChars} characters
+                                          </div>
+                                        )}
+                                        {input.errorMessage && input.maxChars !== undefined && (extraInputValues[input.id] || "").length > input.maxChars ? (
+                                          <div className="mt-2 invalid-feedback d-block" style={{ fontSize: 12 }}>{input.errorMessage}</div>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  ) : null}
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
