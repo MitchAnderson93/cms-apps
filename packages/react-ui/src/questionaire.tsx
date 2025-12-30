@@ -1,6 +1,7 @@
 import React from "react";
 import { Textbox } from "./textbox";
 import { Select } from "./select";
+import { DataTable } from "./data-table";
 
 interface ExtraInputConfig {
   type: "number" | "textarea";
@@ -30,7 +31,7 @@ interface QuestionConfig {
   id: string;
   label: string | string[] | LabelList;
   hint?: string | string[] | HintContent[];
-  type?: "single" | "multi" | "text" | "select" | "html";
+  type?: "single" | "multi" | "text" | "select" | "html" | "data-table";
   options?: QuestionOption[];
   required?: boolean;
   visibleWhen?: VisibleCondition[];
@@ -91,7 +92,25 @@ export function Questionaire({ questions, answers, onAnswerChange }: Questionair
           );
         }
         const value = answers[q.id];
-        const type: "single" | "multi" | "text" | "select" = q.type || (q.options ? (q.options.length > 0 ? "single" : "text") : "text");
+        const type: "single" | "multi" | "text" | "select" | "data-table" = q.type || (q.options ? (q.options.length > 0 ? "single" : "text") : "text");
+          if (q.type === "data-table") {
+            return (
+              <div key={q.id} className="question mb-4">
+                <DataTable
+                  id={q.id}
+                  label={q.label as string}
+                  addLabel={(q as any).addLabel}
+                  deleteLabel={(q as any).deleteLabel}
+                  minRows={(q as any).minRows}
+                  maxRows={(q as any).maxRows}
+                  required={q.required}
+                  value={value || [""]}
+                  placeholder={q.placeholder}
+                  onChange={val => onAnswerChange(q.id, val)}
+                />
+              </div>
+            );
+          }
         if (type === "select") {
           // Only pass allowed types to Select.label
           let selectLabel: string | string[] | HintContent[] = "";

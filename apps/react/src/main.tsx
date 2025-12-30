@@ -120,13 +120,13 @@ function PageContent({
     });
   };
 
-  const getAllVisibleQuestions = (): Array<{ id: string; type?: string }> => {
-    const qs: Array<{ id: string; type?: string }> = [];
+  const getAllVisibleQuestions = (): Array<{ id: string; type?: string; required?: boolean; minRows?: number }> => {
+    const qs: Array<{ id: string; type?: string; required?: boolean; minRows?: number }> = [];
     contentArray.forEach((item: any) => {
       if (item.type === "questionaire" && Array.isArray(item.questions)) {
         item.questions.forEach((q: any) => {
           const visible = !q.visibleWhen || satisfiesConditions(q.visibleWhen);
-          if (visible) qs.push({ id: q.id, type: q.type });
+          if (visible) qs.push({ id: q.id, type: q.type, required: q.required, minRows: q.minRows });
         });
       }
     });
@@ -135,10 +135,17 @@ function PageContent({
 
   const areVisibleQuestionsAnswered = (): boolean => {
     const qs = getAllVisibleQuestions();
-    return qs.every(({ id, type }) => {
+    return qs.every(({ id, type, required, minRows }) => {
       const v = validationState[id];
       if (v === undefined || v === null) return false;
       if (type === "multi") return Array.isArray(v) && v.length > 0;
+      if (type === "data-table") {
+        // Validate data-table: check if array has enough filled rows
+        if (!Array.isArray(v)) return false;
+        const filledRows = v.filter((row: string) => row && row.trim().length > 0);
+        const minRequired = minRows || 1;
+        return filledRows.length >= minRequired && (!required || filledRows.length > 0);
+      }
       if (typeof v === "string") return v.trim().length > 0;
       return true; // booleans/numbers considered answered
     });
@@ -278,6 +285,69 @@ function PageContent({
                 className={item.className}
               />
             );
+          case "debug-button":
+            if (import.meta.env.VITE_DEBUG) {
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    // Group validation state by page
+                    const pages = config.pages || [];
+                    const byPage: Record<string, any> = {};
+                    const unmapped: Record<string, any> = {};
+                    
+                    // Build a map of field ID to page
+                    const fieldToPage: Record<string, string> = {};
+                    pages.forEach((page: any) => {
+                      const contentArray = Array.isArray(page.content) ? page.content : [];
+                      contentArray.forEach((item: any) => {
+                        // Handle questionaire questions
+                        if (item.type === "questionaire" && Array.isArray(item.questions)) {
+                          item.questions.forEach((q: any) => {
+                            if (q.id) fieldToPage[q.id] = page.path;
+                          });
+                        }
+                        // Handle standalone checkbox/select
+                        if ((item.type === "checkbox" || item.type === "select") && item.id) {
+                          fieldToPage[item.id] = page.path;
+                        }
+                      });
+                    });
+                    
+                    // Group validation state by page
+                    Object.keys(validationState).forEach(key => {
+                      const pagePath = fieldToPage[key];
+                      if (pagePath) {
+                        if (!byPage[pagePath]) byPage[pagePath] = {};
+                        byPage[pagePath][key] = validationState[key];
+                      } else {
+                        unmapped[key] = validationState[key];
+                      }
+                    });
+                    
+                    console.log('=== Validation State by Page ===');
+                    Object.keys(byPage).forEach(pagePath => {
+                      const page = pages.find((p: any) => p.path === pagePath);
+                      console.log(`\n${page?.title || pagePath} (${pagePath}):`);
+                      console.log(byPage[pagePath]);
+                    });
+                    
+                    if (Object.keys(unmapped).length > 0) {
+                      console.log('\nUnmapped fields:');
+                      console.log(unmapped);
+                    }
+                    
+                    console.log('\n=== Full State ===');
+                    console.log(validationState);
+                  }}
+                  className="btn btn-secondary"
+                  style={{ marginTop: '1rem' }}
+                >
+                  Debug: Log Payload
+                </button>
+              );
+            }
+            return null;
           case "text":
           default:
             return <p key={index}>{item.content}</p>;

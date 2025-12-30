@@ -25,6 +25,7 @@ interface TextboxProps {
   type?: "text" | "number";
   placeholder?: string;
   pattern?: string;
+  disabled?: boolean;
 }
 
 export function Textbox(props: TextboxProps) {
@@ -42,7 +43,8 @@ export function Textbox(props: TextboxProps) {
     required = false,
     type = "text",
     placeholder = "",
-    pattern
+    pattern,
+    disabled = false
   } = props;
   const [inputValue, setInputValue] = useState(value);
   const [touched, setTouched] = useState(false);
@@ -157,46 +159,48 @@ export function Textbox(props: TextboxProps) {
   };
   return (
     <div className="qgds-textbox-wrapper">
-      <div className={`qld-text-input-label${required ? " field-required" : ""}`}>
-        {(() => {
-          if (typeof label === "object" && label && "heading" in label && "list" in label) {
-            // Render advanced label (LabelList)
-            return <>
-              {required ? " " : ""}{label.heading}
-              {label.intro && <span className="qld-hint-text">{label.intro}</span>}
-              {label.list && label.list.length > 0 && (
-                <ul className="pl-20">
-                  {label.list.map((item, i) =>
-                    typeof item === "string" ? (
-                      <li key={i}>{item}</li>
-                    ) : (
-                      <li key={i}>
-                        <a
-                          href={item.href}
-                          target={item.target || "_blank"}
-                          rel="noopener noreferrer"
-                          className="qld-hint-link"
-                        >
-                          {item.text}
-                        </a>
-                      </li>
-                    )
-                  )}
-                </ul>
-              )}
-            </>;
-          }
-          // For string or array label, add space if required
-          if (typeof label === "string") {
-            return (required ? " " : "") + label;
-          }
-          if (Array.isArray(label)) {
-            return (required ? " " : "") + label.join(" ");
-          }
-          return renderTextOrList(label);
-        })()}
-        {optional && <span className="label-text-optional">(optional)</span>}
-      </div>
+      {label && (
+        <div className={`qld-text-input-label${required ? " field-required" : ""}`}>
+          {(() => {
+            if (typeof label === "object" && label && "heading" in label && "list" in label) {
+              // Render advanced label (LabelList)
+              return <>
+                {required ? " " : ""}{label.heading}
+                {label.intro && <span className="qld-hint-text">{label.intro}</span>}
+                {label.list && label.list.length > 0 && (
+                  <ul className="pl-20">
+                    {label.list.map((item, i) =>
+                      typeof item === "string" ? (
+                        <li key={i}>{item}</li>
+                      ) : (
+                        <li key={i}>
+                          <a
+                            href={item.href}
+                            target={item.target || "_blank"}
+                            rel="noopener noreferrer"
+                            className="qld-hint-link"
+                          >
+                            {item.text}
+                          </a>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
+              </>;
+            }
+            // For string or array label, add space if required
+            if (typeof label === "string") {
+              return (required ? " " : "") + label;
+            }
+            if (Array.isArray(label)) {
+              return (required ? " " : "") + label.join(" ");
+            }
+            return renderTextOrList(label);
+          })()}
+          {optional && <span className="label-text-optional">(optional)</span>}
+        </div>
+      )}
       {hint && renderTextOrList(hint, "qld-hint-text", `${id}-hint`)}
       <input
         id={id}
@@ -214,6 +218,7 @@ export function Textbox(props: TextboxProps) {
         minLength={minChars}
         pattern={pattern}
         inputMode={pattern === "[0-9]*" ? "numeric" : undefined}
+        disabled={disabled}
       />
       {maxChars && (
         <div className={`mt-2 character-count ${isNearLimit ? "text-danger" : ""} ${charCount > maxChars ? "text-danger" : ""}`}>

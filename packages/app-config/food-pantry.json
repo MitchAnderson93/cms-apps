@@ -1,7 +1,7 @@
 {
   "appName": "Example App",
   "version": "1.0.0",
-  "defaultPage": "/example-page",
+  "defaultPage": "/label-buster",
   "theme": {
     "customClass": "--dark"
   },
@@ -1359,7 +1359,7 @@
           "buttons": [
             {
               "text": "Back",
-              "link": "/food-name",
+              "link": "/business-details",
               "variant": "secondary",
               "action": "navigate",
               "requiresValidation": false
@@ -1660,7 +1660,7 @@
             "buttons": [
               {
                 "text": "Back",
-                "link": "/food-name",
+                "link": "/date-marks",
                 "variant": "secondary",
                 "action": "navigate",
                 "requiresValidation": false
@@ -1725,11 +1725,357 @@
       "title": "Ingredients",
       "content": [
         {
+          "type": "callout",
+          "description": "<p>A food label must contain a list of ingredients that have been used to make the food. This is also known as the statement of ingredients.</p>",
+          "className": "mb-4"
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_mention_ingredient",
+              "label": {
+                "heading": [
+                  "Do you mention an ingredient, category of ingredients or a part of the food in the name on the label (",
+                  {
+                    "type": "link",
+                    "text": "characterising ingredients",
+                    "href": "helpGuide#char-ingredient"
+                  },
+                  ")?"
+                ],
+                "intro": "For example: strawberries in strawberry jam, meat in a meat pie.",
+                "list": []
+              },
+              "type": "single",
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Characterising ingredients",
+          "content": "<p>Food labels must show the percentage of the characterising ingredients in the food. The Food Standards Code provides details on how <a href=\"helpGuide#char-ingredient\" class=\"help-guide-link\">characterising ingredients and components</a> should be calculated and shown.</p><p>For example: The ingredient list would show the strawberries in strawberry jam as: <strong>Strawberries (23%)</strong>.</p>",
+          "visibleWhen": [
+            {
+              "id": "q_mention_ingredient",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_compound_ingredients",
+              "label": {
+                "heading": [
+                  "Do you use any ",
+                  {
+                    "type": "link",
+                    "text": "compound ingredients",
+                    "href": "helpGuide#comp-ingredient"
+                  },
+                  " to make your food?"
+                ],
+                "intro": "A compound ingredient is any ingredient that is made from two or more ingredients. For example: chocolate chips in a muffin, tomato paste on a pizza.",
+                "list": []
+              },
+              "type": "single",
+              "required": true, 
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Compound ingredients",
+          "content": "<p>If a food contains <a href=\"helpGuide#comp-ingredient\" class=\"help-guide-link\">compound ingredients</a> that contribute 5% or more to the final food, then all the ingredients and additives in that compound ingredient must be declared. If a food contains a compound ingredient that contributes less than 5% to the final food, then only allergens and food additives require listing.</p><p>For example: The ingredient list would show the dark chocolate chips in a muffin as: <strong>dark chocolate chips [sugar, cocoa mass, cocoa butter, emulsifier (soy lecithin), natural vanilla flavour]</strong>.</p>",
+          "visibleWhen": [
+            {
+              "id": "q_compound_ingredients",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_alternative_ingredients",
+              "label": {
+                "heading": [
+                  "Do you sometimes replace an ingredient with an ",
+                  {
+                    "type": "link",
+                    "text": "alternative ingredient",
+                    "href": "helpGuide#alt-ingredient"
+                  },
+                  " to make your food?"
+                ],
+                "intro": "This includes a food ingredient or additive that is replaced with another food or additive that serves the same function. For example: sultanas or raisins in a protein ball.",
+                "list": []
+              },
+              "type": "single",
+              "required": true, 
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Alternative ingredients",
+          "content": "<p><a href=\"helpGuide#alt-ingredient\" class=\"help-guide-link\">Alternative ingredients</a>, including food additives, must be declared.</p><p>For example: The ingredient list would show: <strong>sultanas or raisins</strong>.</p>",
+          "visibleWhen": [
+            {
+              "id": "q_alternative_ingredients",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_generic_names",
+              "label": {
+                "heading": [
+                  "Do you want to list an ingredient with a ",
+                  {
+                    "type": "link",
+                    "text": "generic name",
+                    "href": "helpGuide#generic-name"
+                  },
+                  " to make your food?"
+                ],
+                "intro": "Generic names may be used to describe the ingredient. Cheese, cocoa butter, crystallised fruit, fruit, gum bases, herbs, meat, milk protein, poultry meat, spices and vegetables can be used as a generic name without any conditions. For example: Apple, pear and peach listed as “fruit” in a fruit pie. The following have other requirements:",
+                "list": [
+                  {
+                    "type": "link",
+                    "text": "Cereals",
+                    "href": "helpGuide#bcr"
+                  },
+                  {
+                    "type": "link",
+                    "text": "Fats or oils",
+                    "href": "helpGuide#oils-margarine"
+                  },
+                  {
+                    "type": "link",
+                    "text": "Fish",
+                    "href": "helpGuide#fish-seafood"
+                  },
+                  {
+                    "type": "link",
+                    "text": "Milk solids",
+                    "href": "helpGuide#milk-dairy"
+                  },
+                  {
+                    "type": "link",
+                    "text": "offal",
+                    "href": "helpGuide#meat-prod"
+                  },
+                  {
+                    "type": "link",
+                    "text": "nuts",
+                    "href": "helpGuide#nuts-seeds"
+                  },
+                  {
+                    "type": "link",
+                    "text": "starch",
+                    "href": "helpGuide#bcr"
+                  },
+                  {
+                    "type": "link",
+                    "text": "sugar",
+                    "href": "helpGuide#sugar-alt"
+                  }                
+                ]
+              },
+              "type": "single",
+              "required": true, 
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Generic names",
+          "content": "<p><a href=\"helpGuide#generic-name\" class=\"help-guide-link\">Generic names</a> are specified in the Food Standards Code.</p><p>For example: The ingredient list could show the ingredients apple, pear and peach as either: <ul><li>Fruit, or</li><li>Fruit (apple, pear, peach)</li></ul></p>",
+          "visibleWhen": [
+            {
+              "id": "q_generic_names",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_food_additives",
+              "label": {
+                "heading": [
+                  "Does your food contain any ",
+                  {
+                    "type": "link",
+                    "text": "food additives",
+                    "href": "helpGuide#food-additive"
+                  },
+                  "?"
+                ],
+                "intro": "For example: Food colours, flavours, preservatives, sweeteners, thickeners, etc.",
+                "list": []
+              },
+              "type": "single",
+              "required": true, 
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Food additives",
+          "content": "<p>The substance (including a vitamin or mineral) used as a food additive must be declared.<br><br>The Food Standards Code specifies how to list food additives in the ingredient list. This includes a list of class names and codes to use for specific food additives.<br><br>For example: The ingredient list would show the yellow food colouring tartrazine as either:<ul><li>Colour (tartrazine), or</li><li>Colour (102)</li></ul></p>",
+          "visibleWhen": [
+            {
+              "id": "q_food_additives",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "q_exempt_ingredients",
+              "label": {
+                "heading": [
+                  "Does your food contain any ",
+                  {
+                    "type": "link",
+                    "text": "exempt ingredients",
+                    "href": "helpGuide#exempt-ingredient"
+                  },
+                  " that do not need to be included in a statement of ingredients?"
+                ],
+                "intro": "For example:",
+                "list": [
+                  "A substance or food that is used as a processing aid.",
+                  "An ingredient of a flavouring substance.",
+                  "An ingredient such as water or alcohol, that is completely removed during the manufacture of the food.",
+                  "Added water that forms part of broth, brine or syrup."
+                ]
+              },
+              "type": "single",
+              "required": true, 
+              "options": [
+                {
+                  "label": "Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "No",
+                  "value": "no"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "Exempt ingredients",
+          "content": "<a href=\"helpGuide#exempt-ingredient\" class=\"help-guide-link\">Exempt ingredients</a> do not need to be included in the ingredient list.", 
+          "visibleWhen": [
+            {
+              "id": "q_exempt_ingredients",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "ingredient_list",
+              "label": " List your ingredients",
+              "type": "data-table",
+              "addLabel": "Add ingredient",
+              "deleteLabel": "Delete",
+              "minRows": 1,
+              "required": true,
+              "placeholder": "Enter ingredient"
+            }
+          ]
+        },
+        {
+          "type": "inpage-alert",
+          "alertType": "info",
+          "heading": "The ingredients should be shown on a food label as:",
+          "content": "<strong>Ingredients:</strong> ",
+          "appendFromAnswers": {
+            "questionId": "ingredient_list",
+            "separator": ", "
+          }
+        },
+        {
           "type": "button-group",
           "buttons": [
             {
               "text": "Back",
-              "link": "/food-name",
+              "link": "/storage-and-use",
               "variant": "secondary",
               "action": "navigate",
               "requiresValidation": false
@@ -1883,7 +2229,7 @@
           "buttons": [
             {
               "text": "Back",
-              "link": "/food-name",
+              "link": "/ingredients",
               "variant": "secondary",
               "action": "navigate",
               "requiresValidation": false
@@ -1950,11 +2296,14 @@
           "content": "<p>On this page, you will find:</p><ul> <li> <a href=\"#product-sheet\">Product sheet</a> </li> <li> <a href=\"#example-label\">Example food label</a> </li> <li> <a href=\"#legibility-requirements\">Legibility requirements</a> </li> <li> <a href=\"#exemptions\">Exemptions</a> </li> <li> <a href=\"#extra-requirements\">Food with extra requirements</a> </li> <li> <a href=\"#download-email\">Email your summary</a> </li> <li> <a href=\"#update\">Need to update your label?</a> </li> </ul>"
         },
         {
+          "type": "debug-button"
+        },
+        {
           "type": "button-group",
           "buttons": [
             {
               "text": "Back",
-              "link": "/food-name",
+              "link": "/statements",
               "variant": "secondary",
               "action": "navigate",
               "requiresValidation": false
