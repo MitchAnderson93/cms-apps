@@ -265,7 +265,9 @@ function PageContent({
                       headers: {
                         "Content-Type": "application/json",
                       },
-                      body: JSON.stringify(validationState),
+                      body: JSON.stringify({
+                        data: validationState,
+                      })
                     });
                     
                     if (!response.ok) {

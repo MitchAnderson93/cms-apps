@@ -2297,7 +2297,19 @@
           "content": "<p>On this page, you will find:</p><ul> <li> <a href=\"#product-sheet\">Product sheet</a> </li> <li> <a href=\"#example-label\">Example food label</a> </li> <li> <a href=\"#legibility-requirements\">Legibility requirements</a> </li> <li> <a href=\"#exemptions\">Exemptions</a> </li> <li> <a href=\"#extra-requirements\">Food with extra requirements</a> </li> <li> <a href=\"#download-email\">Email your summary</a> </li> <li> <a href=\"#update\">Need to update your label?</a> </li> </ul>"
         },
         {
-          "type": "debug-button"
+          "type": "questionaire",
+          "questions": [
+            {
+              "id": "contact_email",
+              "label": "Email address",
+              "hint": "We'll send your summary to this email",
+              "required": true,
+              "type": "text",
+              "placeholder": "example@email.com",
+              "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+              "errorMessage": "Please enter a valid email address"
+            }
+          ]
         },
         {
           "type": "button-group",
@@ -2321,6 +2333,9 @@
               "requiresValidation": false
             }
           ]
+        },
+        {
+          "type": "debug-button"
         }
       ]
     }
