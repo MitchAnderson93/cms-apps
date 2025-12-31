@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ButtonGroupButton {
@@ -15,12 +15,14 @@ interface ButtonGroupProps {
   buttons: ButtonGroupButton[];
   onValidate?: (button?: ButtonGroupButton) => boolean;
   onNavigateSuccess?: (link: string) => void; // Called when navigation happens after validation
+  onSubmit?: () => Promise<void>; // Called when submit button is clicked
 }
 
-export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGroupProps) {
+export function ButtonGroup({ buttons, onValidate, onNavigateSuccess, onSubmit }: ButtonGroupProps) {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleClick = (button: ButtonGroupButton) => {
+  const handleClick = async (button: ButtonGroupButton) => {
     if (button.action === "navigate" && button.link) {
       // Only gate when this button opts-in to validation
       if (button.requiresValidation && onValidate && !onValidate(button)) {
@@ -33,6 +35,19 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
       navigate(button.link);
     } else if (button.action === "cancel" && button.link) {
       navigate(button.link);
+    } else if (button.action === "submit" && onSubmit) {
+      // Validate before submitting
+      if (button.requiresValidation && onValidate && !onValidate(button)) {
+        return;
+      }
+      try {
+        setIsSubmitting(true);
+        await onSubmit();
+      } catch (error) {
+        console.error("Submission error:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -41,8 +56,12 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
     if (button.disabled !== undefined) {
       return button.disabled;
     }
+    // Disable submit buttons while submitting
+    if (button.action === "submit" && isSubmitting) {
+      return true;
+    }
     // If validation is required for this button, reflect disabled state
-    if (button.requiresValidation && onValidate && button.action === "navigate" && button.link) {
+    if (button.requiresValidation && onValidate && (button.action === "navigate" || button.action === "submit") && button.link) {
       return !onValidate(button);
     }
     return false;
@@ -58,7 +77,14 @@ export function ButtonGroup({ buttons, onValidate, onNavigateSuccess }: ButtonGr
           onClick={() => handleClick(button)}
           disabled={isButtonDisabled(button)}
         >
-          {button.text}
+          {button.action === "submit" && isSubmitting ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Submitting...
+            </>
+          ) : (
+            button.text
+          )}
         </button>
       ))}
     </div>

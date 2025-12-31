@@ -2,6 +2,7 @@
   "appName": "Example App",
   "version": "1.0.0",
   "defaultPage": "/label-buster",
+  "submissionEndpoint": "https://test.smartservice.qld.gov.au/services/submissions/cmswam-foodpantry",
   "theme": {
     "customClass": "--dark"
   },
@@ -2297,6 +2298,17 @@
         },
         {
           "type": "debug-button"
+        },
+        {
+          "type": "button-group",
+          "buttons": [
+            {
+              "text": "Submit",
+              "variant": "primary",
+              "action": "submit",
+              "requiresValidation": false
+            }
+          ]
         },
         {
           "type": "button-group",

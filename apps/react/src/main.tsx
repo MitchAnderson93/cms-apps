@@ -249,6 +249,39 @@ function PageContent({
                     markPageCompleted(currentPage.path);
                   }
                 }}
+                onSubmit={async () => {
+                  const submissionEndpoint = config.submissionEndpoint;
+                  if (!submissionEndpoint) {
+                    if (import.meta.env.VITE_DEBUG) {
+                      console.error("No submission endpoint configured");
+                    }
+                    alert("No submission endpoint configured");
+                    return;
+                  }
+                  
+                  try {
+                    const response = await fetch(submissionEndpoint, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(validationState),
+                    });
+                    
+                    if (!response.ok) {
+                      throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    if (import.meta.env.VITE_DEBUG) {
+                      console.log("Submission successful:", data);
+                    }
+                  } catch (error) {
+                    if (import.meta.env.VITE_DEBUG) {
+                      console.error("Submission failed:", error);
+                    }
+                  }
+                }}
               />
             );
           case "questionaire":
