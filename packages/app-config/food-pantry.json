@@ -2,7 +2,7 @@
   "appName": "Example App",
   "version": "1.0.0",
   "defaultPage": "/label-buster",
-  "submissionEndpoint": "https://test.smartservice.qld.gov.au/services/submissions/cmswam-foodpantry",
+  "submissionEndpoint": "https://test.smartservice.qld.gov.au/services/submissions/email/qld/cmswam-foodpantry",
   "theme": {
     "customClass": "--dark"
   },
