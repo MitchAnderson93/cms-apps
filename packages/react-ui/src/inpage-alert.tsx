@@ -1,5 +1,3 @@
-import React from "react";
-
 interface InpageAlertProps {
   type?: "info" | "warning" | "success" | "error";
   heading?: string;
@@ -35,19 +33,10 @@ export function InpageAlert({
     const selected = answers[appendFromAnswers.questionId];
     const extra = answers[`${appendFromAnswers.questionId}_extra`] || {};
     
-    console.log('InpageAlert Debug:', {
-      questionId: appendFromAnswers.questionId,
-      selected,
-      extra,
-      hasOptionsMap: !!appendFromAnswers.optionsMap,
-      allAnswers: answers
-    });
-    
     if (Array.isArray(selected) && selected.length > 0) {
       // If no optionsMap, treat selected as raw values (e.g., data-table)
       if (!appendFromAnswers.optionsMap) {
         const mapped = selected.filter(Boolean).join(appendFromAnswers.separator || " ");
-        console.log('Mapped result (no optionsMap):', mapped);
         if (mapped) {
           appendedContent = content + mapped;
         }

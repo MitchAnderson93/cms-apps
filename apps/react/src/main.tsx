@@ -1,36 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Sidenav, InpageAlert, Button, Accordion, Checkbox, ButtonGroup, Image, Questionaire, HelpGuide, Callout, Select } from "@repo/react-ui";
 import { createPortal } from "react-dom";
-
-// FINDME: Hotfix to exclude global CMS style that adds unwanted margin to list items
-// This style override is necessary because .qld-content-body li { margin-top: .5rem; }
-// is a global limitation of the embedded app that affects our component styling
-const styleOverride = `
-  .qld-content-body li {
-    margin-top: 0 !important;
-  }
-  
-  /* Disabled state for sidenav links */
-  .qld-side-navigation .nav-link.disabled {
-    color: var(--bs-secondary-color);
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.5;
-  }
-`;
-
-// Config injected at build time
-declare const __APP_CONFIG__: any;
-
-function ScrollToTop() {
-  const location = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-  return null;
-}
+import { satisfiesConditions } from "./utils/validation.js";
+import { useAppConfig } from "./hooks/useAppConfig.js";
+import { useProgressiveLocking } from "./hooks/useProgressiveLocking.js";
+import { ScrollToTop } from "./components/ScrollToTop.js";
+import "./styles/overrides.css";
 
 function PageContent({ 
   validationState, 
@@ -43,7 +20,7 @@ function PageContent({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const config = __APP_CONFIG__ || {};
+  const config = useAppConfig();
   const pages = config.pages || [];
   const currentPage = pages.find((p: any) => p.path === location.pathname);
   
@@ -73,59 +50,15 @@ function PageContent({
     ? currentPage.content 
     : [{ type: "text", content: currentPage.content }];
 
-  // Helpers for conditional visibility and questionnaire validation
-  const satisfiesConditions = (conds?: Array<{ id: string; value?: any; answered?: boolean; required?: boolean; minLength?: number; maxLength?: number; pattern?: string }>): boolean => {
-    if (!conds || conds.length === 0) return true;
-    return conds.every((c) => {
-      const v = validationState[c.id];
-      
-      // Handle validation rules for text inputs
-      if (c.answered !== undefined) {
-        // Check if question is answered
-        return v !== undefined && v !== null && v !== "";
-      }
-      
-      if (c.required !== undefined && c.required) {
-        // Check if required field has a value
-        if (v === undefined || v === null || v === "") return false;
-      }
-      
-      if (c.minLength !== undefined) {
-        // Check minimum length for text inputs
-        if (typeof v !== "string") return false;
-        if (v.length < c.minLength) return false;
-      }
-      
-      if (c.maxLength !== undefined) {
-        // Check maximum length for text inputs
-        if (typeof v === "string" && v.length > c.maxLength) return false;
-      }
-      
-      if (c.pattern !== undefined) {
-        // Check if value matches the pattern
-        if (typeof v !== "string") return false;
-        const regex = new RegExp("^" + c.pattern + "$");
-        if (!regex.test(v)) return false;
-      }
-      
-      // Handle value matching (for visibility conditions)
-      if (c.value !== undefined) {
-        if (Array.isArray(c.value)) {
-          return Array.isArray(v) && c.value.every((cv) => v.includes(cv));
-        }
-        return v === c.value;
-      }
-      
-      return true;
-    });
-  };
+  // Get field dependencies for cascading updates
+  const fieldDependencies = config.fieldDependencies || {};
 
   const getAllVisibleQuestions = (): Array<{ id: string; type?: string; required?: boolean; minRows?: number }> => {
     const qs: Array<{ id: string; type?: string; required?: boolean; minRows?: number }> = [];
     contentArray.forEach((item: any) => {
       if (item.type === "questionaire" && Array.isArray(item.questions)) {
         item.questions.forEach((q: any) => {
-          const visible = !q.visibleWhen || satisfiesConditions(q.visibleWhen);
+          const visible = !q.visibleWhen || satisfiesConditions(q.visibleWhen, validationState);
           if (visible) qs.push({ id: q.id, type: q.type, required: q.required, minRows: q.minRows });
         });
       }
@@ -151,13 +84,12 @@ function PageContent({
     });
   };
   
-  {/* Debug: {config.appName} v:{config.version} */}
   return (
     <>
       <h1>{currentPage.title}</h1>
       {contentArray.map((item: any, index: number) => {
         // Support conditional visibility for any content item via visibleWhen
-        if (item.visibleWhen && !satisfiesConditions(item.visibleWhen)) {
+        if (item.visibleWhen && !satisfiesConditions(item.visibleWhen, validationState)) {
           return null;
         }
         switch (item.type) {
@@ -236,7 +168,7 @@ function PageContent({
                 onValidate={(button) => {
                   // If button has validateWhen, use it for validation
                   if (button && Array.isArray(button.validateWhen)) {
-                    return satisfiesConditions(button.validateWhen);
+                    return satisfiesConditions(button.validateWhen, validationState);
                   }
                   if (item.validateCheckbox) {
                     return validationState[item.validateCheckbox] === true;
@@ -300,10 +232,14 @@ function PageContent({
                     } else {
                       next[id] = value;
                     }
-                    // Special logic: if q_is_drink_complex changes, always clear q_special_purpose
-                    if (id === "q_is_drink_complex") {
-                      delete next["q_special_purpose"];
+                    
+                    // Handle cascading field dependencies
+                    if (fieldDependencies[id]) {
+                      fieldDependencies[id].forEach((dependentId: string) => {
+                        delete next[dependentId];
+                      });
                     }
+                    
                     return next;
                   });
                 }}
@@ -321,68 +257,64 @@ function PageContent({
               />
             );
           case "debug-button":
-            if (import.meta.env.VITE_DEBUG) {
-              return (
-                <button
-                  key={index}
-                  onClick={() => {
-                    // Group validation state by page
-                    const pages = config.pages || [];
-                    const byPage: Record<string, any> = {};
-                    const unmapped: Record<string, any> = {};
-                    
-                    // Build a map of field ID to page
-                    const fieldToPage: Record<string, string> = {};
-                    pages.forEach((page: any) => {
-                      const contentArray = Array.isArray(page.content) ? page.content : [];
-                      contentArray.forEach((item: any) => {
-                        // Handle questionaire questions
-                        if (item.type === "questionaire" && Array.isArray(item.questions)) {
-                          item.questions.forEach((q: any) => {
-                            if (q.id) fieldToPage[q.id] = page.path;
-                          });
-                        }
-                        // Handle standalone checkbox/select
-                        if ((item.type === "checkbox" || item.type === "select") && item.id) {
-                          fieldToPage[item.id] = page.path;
-                        }
-                      });
-                    });
-                    
-                    // Group validation state by page
-                    Object.keys(validationState).forEach(key => {
-                      const pagePath = fieldToPage[key];
-                      if (pagePath) {
-                        if (!byPage[pagePath]) byPage[pagePath] = {};
-                        byPage[pagePath][key] = validationState[key];
-                      } else {
-                        unmapped[key] = validationState[key];
+            if (!import.meta.env.VITE_DEBUG) return null;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => {
+                  const pages = config.pages || [];
+                  const byPage: Record<string, any> = {};
+                  const unmapped: Record<string, any> = {};
+                  
+                  // Build a map of field ID to page
+                  const fieldToPage: Record<string, string> = {};
+                  pages.forEach((page: any) => {
+                    const contentArray = Array.isArray(page.content) ? page.content : [];
+                    contentArray.forEach((item: any) => {
+                      if (item.type === "questionaire" && Array.isArray(item.questions)) {
+                        item.questions.forEach((q: any) => {
+                          if (q.id) fieldToPage[q.id] = page.path;
+                        });
+                      }
+                      if ((item.type === "checkbox" || item.type === "select") && item.id) {
+                        fieldToPage[item.id] = page.path;
                       }
                     });
-                    
-                    console.log('=== Validation State by Page ===');
-                    Object.keys(byPage).forEach(pagePath => {
-                      const page = pages.find((p: any) => p.path === pagePath);
-                      console.log(`\n${page?.title || pagePath} (${pagePath}):`);
-                      console.log(byPage[pagePath]);
-                    });
-                    
-                    if (Object.keys(unmapped).length > 0) {
-                      console.log('\nUnmapped fields:');
-                      console.log(unmapped);
+                  });
+                  
+                  // Group validation state by page
+                  Object.keys(validationState).forEach(key => {
+                    const pagePath = fieldToPage[key];
+                    if (pagePath) {
+                      if (!byPage[pagePath]) byPage[pagePath] = {};
+                      byPage[pagePath][key] = validationState[key];
+                    } else {
+                      unmapped[key] = validationState[key];
                     }
-                    
-                    console.log('\n=== Full State ===');
-                    console.log(validationState);
-                  }}
-                  className="btn btn-secondary"
-                  style={{ marginTop: '1rem' }}
-                >
-                  Debug: Log Payload
-                </button>
-              );
-            }
-            return null;
+                  });
+                  
+                  console.log('=== Validation State by Page ===');
+                  Object.keys(byPage).forEach(pagePath => {
+                    const page = pages.find((p: any) => p.path === pagePath);
+                    console.log(`\n${page?.title || pagePath} (${pagePath}):`);
+                    console.log(byPage[pagePath]);
+                  });
+                  
+                  if (Object.keys(unmapped).length > 0) {
+                    console.log('\nUnmapped fields:');
+                    console.log(unmapped);
+                  }
+                  
+                  console.log('\n=== Full State ===');
+                  console.log(validationState);
+                }}
+                className="btn btn-secondary"
+                style={{ marginTop: '1rem' }}
+              >
+                Debug: Log Payload
+              </button>
+            );
           case "text":
           default:
             return <p key={index}>{item.content}</p>;
@@ -394,7 +326,7 @@ function PageContent({
 
 function App() {
   const location = useLocation();
-  const config = __APP_CONFIG__ || {};
+  const config = useAppConfig();
   const nav = config.navigation || {};
   const sidenavEnabled = nav.enabled === true;
   
@@ -402,48 +334,19 @@ function App() {
   const [validationState, setValidationState] = useState<Record<string, any>>({});
   const [completedPages, setCompletedPages] = useState<Set<string>>(new Set());
   
-  // Get all child page paths from navigation
-  const getChildPaths = (navlist: any[]): string[] => {
-    const childPaths: string[] = [];
-    navlist.forEach((item: any) => {
-      if (item.children && item.children.length > 0) {
-        item.children.forEach((child: any) => {
-          if (!child.link.startsWith("http") && !child.link.startsWith("#")) {
-            childPaths.push(child.link);
-          }
-        });
-      }
-    });
-    return childPaths;
-  };
-  
   // Get disabled paths based on sequential progression
-  const allChildPaths = getChildPaths(nav.navlist || []);
-  const currentPath = location.pathname;
-  
-  // Enable first child page by default, and any completed pages
-  const disabledPaths = allChildPaths.filter((path, index) => {
-    // First child is always enabled
-    if (index === 0) return false;
-    // Check if previous page is completed
-    const previousPath = allChildPaths[index - 1];
-    if (!previousPath) return true;
-    return !completedPages.has(previousPath);
-  });
+  const disabledPaths = useProgressiveLocking(nav.navlist || [], completedPages);
   
   // Mark current page as completed when validation passes
   const markPageCompleted = (path: string) => {
     setCompletedPages(prev => new Set([...prev, path]));
   };
   
-  // Debug: {config.appName} v{config.version}
-  
   if (!sidenavEnabled) {
     // Full width layout without sidenav
     return (
       <div className="row">
         <div className="col-12">
-          {/* Debug: {config.appName} v{config.version} */}
           <PageContent 
             validationState={validationState} 
             setValidationState={setValidationState}
@@ -478,7 +381,7 @@ function App() {
 }
 
 function AppWithRouter() {
-  const config = __APP_CONFIG__ || {};
+  const config = useAppConfig();
   const pages = config.pages || [];
   const [helpOpen, setHelpOpen] = useState(false);
   const [helpActive, setHelpActive] = useState<string | undefined>(undefined);
@@ -505,7 +408,7 @@ function AppWithRouter() {
   // Portal component to render HelpGuide with page-specific sections
   function HelpGuidePortal({ open, activeId }: { open: boolean; activeId?: string }) {
     const location = useLocation();
-    const cfg = __APP_CONFIG__ || {};
+    const cfg = useAppConfig();
     const ps = cfg.pages || [];
     const currentPage = ps.find((p: any) => p.path === location.pathname);
     
@@ -548,7 +451,6 @@ function AppWithRouter() {
         ))}
         <Route path="*" element={<App />} />
       </Routes>
-      {/* Render HelpGuide outside root constraints via portal, only for relevant pages */}
       <HelpGuidePortal open={helpOpen} activeId={helpActive} />
     </HashRouter>
   );
@@ -556,7 +458,6 @@ function AppWithRouter() {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <style dangerouslySetInnerHTML={{ __html: styleOverride }} />
     <AppWithRouter />
   </React.StrictMode>
 );

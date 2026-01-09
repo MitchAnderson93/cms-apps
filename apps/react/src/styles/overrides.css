@@ -1,0 +1,22 @@
+/**
+ * TEMPORARY WORKAROUNDS - Client-specific style overrides
+ * These will be removed once the underlying issues are fixed in the CMS or component library
+ * 
+ * FINDME: Review and remove these overrides when no longer needed
+ */
+
+/* Hotfix to exclude global CMS style that adds unwanted margin to list items
+ * This style override is necessary because .qld-content-body li { margin-top: .5rem; }
+ * is a global limitation of the embedded app that affects our component styling
+ */
+.qld-content-body li {
+  margin-top: 0 !important;
+}
+
+/* Disabled state for sidenav links */
+.qld-side-navigation .nav-link.disabled {
+  color: var(--bs-secondary-color);
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
