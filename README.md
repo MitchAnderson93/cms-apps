@@ -33,7 +33,7 @@ pnpm install
 
 2. Create `.env` file in your app directory (not committed to git):
 ```bash
-# apps/react/.env
+# apps/react-client/.env
 VITE_APP_CONFIG=example.json
 ```
 
