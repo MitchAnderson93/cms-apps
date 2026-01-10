@@ -108,9 +108,21 @@ Different workflows can use different configs (e.g., `staging.json`, `production
 - Push to `development` branch
 - Manual workflow dispatch
 
+## Documentation
+
+### Component Schemas
+**[Component Schema Documentation](COMPONENT_SCHEMAS.md)** - Complete reference for all supported content component types, including:
+- Component type schemas and properties
+- Configuration examples
+- Conditional visibility rules
+- Field dependencies
+- Best practices
+
+All component types used in the `pages[].content[]` configuration arrays are documented with full schema definitions and examples.
+
 ## Useful Links
 
-Learn more about the power of Turborepo:
+Learn more about Turborepo:
 
 - [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
 - [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
