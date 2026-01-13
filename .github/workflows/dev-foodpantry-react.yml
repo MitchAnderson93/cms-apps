@@ -23,13 +23,13 @@ jobs:
           corepack enable
           corepack prepare pnpm@9.15.0 --activate
           pnpm install
-          pnpm build:app --config food-pantry.json --app react
+          pnpm build:app --config food-pantry.json --app react-client
 
       - name: Stage build output + stable aliases
         run: |
           rm -rf /tmp/dist
           mkdir -p /tmp/dist
-          cp -R apps/react/dist/assets/. /tmp/dist/
+          cp -R apps/react-client/dist/assets/. /tmp/dist/
 
           cp "$(ls -1 /tmp/dist/*.js 2>/dev/null | head -n 1)" /tmp/dist/dist.js
           if ls -1 /tmp/dist/*.css >/dev/null 2>&1; then

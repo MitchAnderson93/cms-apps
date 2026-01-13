@@ -6,7 +6,7 @@ Based on [Turborepo](https://turborepo.com/) - a high-performance build system f
 
 ### Apps (`apps/`)
 Contains deployable applications:
-- **react** - React SPA (Vite)
+- **react-client** - React SPA (Vite)
 
 ### Packages (`packages/`)
 Shared packages used across applications:
@@ -33,7 +33,7 @@ pnpm install
 
 2. Create `.env` file in your app directory (not committed to git):
 ```bash
-# apps/react/.env
+# apps/react-client/.env
 VITE_APP_CONFIG=example.json
 ```
 
@@ -42,7 +42,7 @@ This tells the dev server which config to use locally (local only). The config i
 3. Start the dev server:
 ```bash
 # Run dev server for a specific app
-pnpm --filter react dev
+pnpm --filter react-client dev
 
 # Or run dev server for all apps
 pnpm dev
@@ -60,7 +60,7 @@ pnpm build:app --config <config-file> --app <app-name>
 
 **Example:**
 ```bash
-pnpm build:app --config example.json --app react
+pnpm build:app --config example.json --app react-client
 ```
 
 This command:
@@ -91,7 +91,7 @@ The `.github/workflows/example-app.yml` workflow demonstrates how to build and d
   run: |
     ...
     pnpm install
-    pnpm build:app --config example.json --app react
+    pnpm build:app --config example.json --app react-client
 ```
 
 **What happens:**
