@@ -6,7 +6,7 @@ Based on [Turborepo](https://turborepo.com/) - a high-performance build system f
 
 ### Apps (`apps/`)
 Contains deployable applications:
-- **react** - React SPA (Vite)
+- **react-client** - React SPA (Vite)
 
 ### Packages (`packages/`)
 Shared packages used across applications:
@@ -119,6 +119,9 @@ Different workflows can use different configs (e.g., `staging.json`, `production
 - Best practices
 
 All component types used in the `pages[].content[]` configuration arrays are documented with full schema definitions and examples.
+
+## Setting up your own GUI (gitbridge)
+TBP
 
 ## Useful Links
 

@@ -18,7 +18,16 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
-  apps/react:
+  apps/config-builder:
+    devDependencies:
+      '@qld-gov-au/qgds-bootstrap5':
+        specifier: ^2.1.5
+        version: 2.1.5(@popperjs/core@2.11.8)(typescript@5.9.3)
+      vite:
+        specifier: ^7.2.7
+        version: 7.2.7(@types/node@22.15.3)
+
+  apps/react-client:
     dependencies:
       '@repo/react-ui':
         specifier: workspace:*

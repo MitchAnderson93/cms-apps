@@ -19,7 +19,7 @@ for (let i = 0; i < args.length; i++) {
 
 if (!configFile || !appName) {
   console.error('Usage: node build.js --config <config-file> --app <app-name>');
-  console.error('Example: node build.js --config example.json --app react');
+  console.error('Example: node build.js --config example.json --app react-client');
   process.exit(1);
 }
 
