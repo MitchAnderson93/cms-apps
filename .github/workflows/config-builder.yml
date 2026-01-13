@@ -1,8 +1,8 @@
-name: Build development dist release
+name: Build GUI dist
 
 on:
   push:
-    branches: [development]
+    branches: [GUI]
   workflow_dispatch: {}
 
 permissions:
@@ -23,18 +23,13 @@ jobs:
           corepack enable
           corepack prepare pnpm@9.15.0 --activate
           pnpm install
-          pnpm build:app --config food-pantry.json --app react-client
+          pnpm turbo run build --filter=config-builder
 
       - name: Stage build output + stable aliases
         run: |
           rm -rf /tmp/dist
           mkdir -p /tmp/dist
-          cp -R apps/react-client/dist/assets/. /tmp/dist/
-
-          cp "$(ls -1 /tmp/dist/*.js 2>/dev/null | head -n 1)" /tmp/dist/dist.js
-          if ls -1 /tmp/dist/*.css >/dev/null 2>&1; then
-            cp "$(ls -1 /tmp/dist/*.css | head -n 1)" /tmp/dist/dist.css
-          fi
+          cp -R apps/config-builder/dist/. /tmp/dist/
 
       - name: Publish to dist branch
         run: |
@@ -42,7 +37,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Use config name in branch (e.g., dist-example, dist-production)
-          DIST_BRANCH="dist-react"
+          DIST_BRANCH="dist-gui"
 
           git checkout --orphan $DIST_BRANCH
           git rm -rf . || true

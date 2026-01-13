@@ -6,7 +6,7 @@ Based on [Turborepo](https://turborepo.com/) - a high-performance build system f
 
 ### Apps (`apps/`)
 Contains deployable applications:
-- **react** - React SPA (Vite)
+- **react-client** - React SPA (Vite)
 
 ### Packages (`packages/`)
 Shared packages used across applications:
@@ -33,7 +33,7 @@ pnpm install
 
 2. Create `.env` file in your app directory (not committed to git):
 ```bash
-# apps/react/.env
+# apps/react-client/.env
 VITE_APP_CONFIG=example.json
 ```
 
@@ -119,6 +119,9 @@ Different workflows can use different configs (e.g., `staging.json`, `production
 - Best practices
 
 All component types used in the `pages[].content[]` configuration arrays are documented with full schema definitions and examples.
+
+## Setting up your own GUI (gitbridge)
+TBP
 
 ## Useful Links
 
